@@ -6,5 +6,4 @@ urlpatterns = [
     path('rooms/spot/', views.RoomViewAPI.as_view()),
     path('rooms/<int:room_id>/', views.DetailRoomViewAPI.as_view()),
     path('customers/<int:room_id>/', views.BookUsersViewAPI.as_view()),
-
 ]
