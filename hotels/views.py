@@ -1,4 +1,4 @@
-from .serializers import DetailSerializer, RoomsSerializers, SpotSerializer
+from .serializers import DetailSerializer, RoomsSerializer, SpotSerializer
 from rest_framework.generics import get_object_or_404
 from rest_framework import status, permissions
 from rest_framework.response import Response
@@ -6,11 +6,9 @@ from rest_framework.views import APIView
 from .models import Rooms, Book, Spots
 
 
-
-
-class RoomViewAPI():
+class RoomViewAPI(APIView):
     def post(self, request):
-        serializer = RoomsSerializers(data=request.data)
+        serializer = RoomsSerializer(data=request.data)
         if serializer.is_valid():
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
@@ -18,9 +16,9 @@ class RoomViewAPI():
 
     def get(self, request):
         rooms = Rooms.objects.all()
-        serializer = RoomsSerializers(rooms, many=True)
+        serializer = RoomsSerializer(rooms, many=True)
         return Response(serializer.data)
-      
+
 
 # 방 정보 수정 및 삭제
 class DetailRoomViewAPI(APIView):
@@ -44,7 +42,7 @@ class DetailRoomViewAPI(APIView):
 class BookUsersViewAPI(APIView):
     def get(self, request, room_id):
         booked_all_rooms = get_object_or_404(Book, id=room_id)
-        serializer = RoomsSerializers(booked_all_rooms, many=True)
+        serializer = RoomsSerializer(booked_all_rooms, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -61,5 +59,3 @@ class SpotViewAPI(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
