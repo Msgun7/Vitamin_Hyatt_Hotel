@@ -24,3 +24,4 @@ class SpotSerializer(serializers.ModelSerializer):
     class Meta:
         model = Spots
         fields = '__all__'
+
