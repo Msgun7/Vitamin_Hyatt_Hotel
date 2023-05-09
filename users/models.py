@@ -31,13 +31,9 @@ class User(AbstractBaseUser):
     )
     username = models.CharField(max_length=255,null=False) 
     phone = models.CharField(max_length=255,null=False) 
-    point = models.IntegerField(default= 0)
     created_at = models.DateTimeField(auto_now_add=True)
-    
     is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=False)
-    is_staff = models.BooleanField(default=False)
-
+    
     objects = UserManager()
 
     USERNAME_FIELD = "email"
@@ -55,3 +51,12 @@ class User(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.is_admin
+    
+class BasicUser(AbstractBaseUser):
+    user = models.OneToOneField("app.Model", verbose_name=_(""), on_delete=models.CASCADE)
+    point = models.IntegerField(default= 0)
+    
+class AdminUser(AbstractBaseUser):
+    user = models.OneToOneField("app.Model", verbose_name=_(""), on_delete=models.CASCADE)
+    is_admin = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
