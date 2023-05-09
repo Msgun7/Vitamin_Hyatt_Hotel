@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from .serializers import DetailSerializer, RoomsSerializer, SpotSerializer
 from rest_framework.generics import get_object_or_404
 from rest_framework import status, permissions
@@ -6,10 +7,18 @@ from rest_framework.views import APIView
 from .models import Rooms, Book, Spots
 
 
+=======
+from rest_framework.views import APIView
+from rest_framework.response import Response
+# from hotels.serializers import HotelSerializer
+
+
+>>>>>>> 2911bad (merge;)
 class RoomViewAPI(APIView):
     pass
 
 
+<<<<<<< HEAD
 # 방 정보 수정 및 삭제
 class DetailRoomViewAPI(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -50,4 +59,17 @@ class SpotViewAPI(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+=======
+class DetailRoomViewAPI(APIView):
+    def put(self, room_id):
+    pass
+
+
+class BookUsersViewAPI(APIView):
+    pass
+
+
+class SpotViewAPI(APIView):
+    pass
+>>>>>>> 2911bad (merge;)
 

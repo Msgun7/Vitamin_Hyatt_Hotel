@@ -2,6 +2,6 @@ from django.urls import path
 from hotels import views
 
 urlpatterns = [
-    path('', views.HotelView.as_view()),
+    path('', views.RoomViewAPI.as_view()),
     path(''),
 ]
