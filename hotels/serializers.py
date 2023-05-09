@@ -3,7 +3,7 @@ from rest_framework.serializers import ValidationError
 from .models import Rooms, Book, Spots
 
 
-class RoomsSerializer(serializers.ModelSerializer):
+class RoomsSerializers(serializers.ModelSerializer):
     class Meta:
         model = Rooms
         fields = '__all__'
