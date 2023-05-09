@@ -7,7 +7,14 @@ class BookSerializer(serializers.ModelSerializer):
         model = Book
         fields = '__all__'
 
+
+
 class RoomSerializer(serializers.ModelSerializer):
     class Meta():
         model = Rooms
         fields = '__all__'
+
+
+class SearchSerializer(serializers.ModelSerializer):
+    class Meta():
+        pass
