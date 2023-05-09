@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+<<<<<<< HEAD
 # from hotels.models import Book, Rooms
 
 
@@ -15,6 +16,10 @@ class Review(models.Model):
 
 
 class UserManager(BaseUserManager):
+=======
+
+class UserManager(BaseUserManager): 
+>>>>>>> 9a70122 (add user model)
     def create_user(self, email, password=None):
         if not email:
             raise ValueError("Users must have an email address")
@@ -27,7 +32,11 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+<<<<<<< HEAD
     def create_superuser(self, email, password=None):
+=======
+    def create_superuser(self, email, password=None): 
+>>>>>>> 9a70122 (add user model)
         user = self.create_user(
             email,
             password=password,
@@ -35,19 +44,32 @@ class UserManager(BaseUserManager):
         user.is_admin = True
         user.save(using=self._db)
         return user
+<<<<<<< HEAD
 
 
 class User(AbstractBaseUser):
+=======
+    
+class User(AbstractBaseUser): 
+>>>>>>> 9a70122 (add user model)
     email = models.EmailField(
         verbose_name="email address",
         max_length=255,
         unique=True,
     )
+<<<<<<< HEAD
     username = models.CharField(max_length=255, null=False)
     phone = models.CharField(max_length=255, null=False)
     point = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
+=======
+    username = models.CharField(max_length=255,null=False) 
+    phone = models.CharField(max_length=255,null=False) 
+    point = models.IntegerField(default= 0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+>>>>>>> 9a70122 (add user model)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
