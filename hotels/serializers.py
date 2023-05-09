@@ -9,3 +9,4 @@ class RoomsSerializers(serializers.ModelSerializer):
         fields = '__all__'
 
 # 만들었다. 시리얼라이저 했다. 내가
+# plus plus
