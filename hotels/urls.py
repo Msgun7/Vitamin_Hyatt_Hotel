@@ -3,5 +3,5 @@ from hotels import views
 
 urlpatterns = [
     path('', views.HotelView.as_view()),
-    path(''),
 ]
+  
