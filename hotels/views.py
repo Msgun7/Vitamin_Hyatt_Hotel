@@ -79,6 +79,6 @@ class SpotViewAPI(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, spot_id=None):
-        room = self.get_object(request, spot_id)
-        room.delete()
+        spot = self.get_object(request, spot_id)
+        spot.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
