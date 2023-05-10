@@ -39,6 +39,22 @@ class Rooms(models.Model):
 
     def get_absolute_url(self):
         return reverse('todo_detail_view', kwargs={'room_id': self.id})
+<<<<<<< HEAD
+=======
+from django import reverse
+
+
+class Book(models.Model):
+    # user = models.ForeignKey(Users, on_delete=models.CASCADE)
+    # room = models.ForeignKey(Rooms, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    members = models.IntegerField(default=1)
+    check_in = models.DateField()
+    check_out = models.DateField()
+    
+    # def __str__(self):
+    #     return self.user
+>>>>>>> ea234cf (review기능 추가 및 mypage 조회 기능 추가)
 
     def __str__(self):
         return self.name
