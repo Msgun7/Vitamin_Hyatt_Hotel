@@ -6,7 +6,6 @@ from rest_framework.views import APIView
 from .models import Rooms, Book, Spots
 
 
-
 class RoomView(APIView):
     def get(self, request):
         rooms = Rooms.objects.all()
@@ -85,7 +84,6 @@ class SpotViewAPI(APIView):
         spot.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
     
 class BookManage(APIView):
     def get(self, request):
@@ -116,9 +114,8 @@ class BookManage(APIView):
 
     
 
-class ReserView(APIView):
+class RoomViewAPI(APIView):
     pass
-
 
 
 

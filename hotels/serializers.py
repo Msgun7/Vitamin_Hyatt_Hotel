@@ -57,15 +57,9 @@ class SpotSerializer(serializers.ModelSerializer):
 from hotels.models import Rooms, Book
 
 
-class BookSerializer(serializers.ModelSerializer):
-    class Meta():
-        model = Book
-        fields = '__all__'
 
-
-
-class RoomSerializer(serializers.ModelSerializer):
-    class Meta():
+class RoomsSerializer(serializers.ModelSerializer):
+    class Meta:
         model = Rooms
         fields = '__all__'
 <<<<<<< HEAD
@@ -74,6 +68,29 @@ class RoomSerializer(serializers.ModelSerializer):
 
 
 class SearchSerializer(serializers.ModelSerializer):
+<<<<<<< HEAD
     class Meta():
         pass
 >>>>>>> d5fd653 (UPDATE View.py and Serializer)
+=======
+    class Meta:
+        pass
+
+
+class DetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rooms
+        fields = '__all__'
+
+    def update(self, instance, validated_data):
+        room = super().update(instance, validated_data)
+        room.save()
+        return room
+
+
+class SpotSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Spots
+        fields = '__all__'
+
+>>>>>>> 0dcc30a (fix hetels.view)
