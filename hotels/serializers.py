@@ -62,8 +62,18 @@ class BookSerializer(serializers.ModelSerializer):
         model = Book
         fields = '__all__'
 
+
+
 class RoomSerializer(serializers.ModelSerializer):
     class Meta():
         model = Rooms
         fields = '__all__'
+<<<<<<< HEAD
 >>>>>>> 2030fc6 (view.py 뼈대랑 간단한 내용들 작성)
+=======
+
+
+class SearchSerializer(serializers.ModelSerializer):
+    class Meta():
+        pass
+>>>>>>> d5fd653 (UPDATE View.py and Serializer)
