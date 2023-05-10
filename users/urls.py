@@ -7,3 +7,4 @@ urlpatterns = [
     path('reviews/<int:review_id>', views.ReviewDetail.as_view()),
     path('profile/<int:user_id>', views.MyPage.as_view())
 ]
+
