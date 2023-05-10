@@ -84,7 +84,7 @@ class SpotViewAPI(APIView):
         spot.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    
+
 class BookManage(APIView):
     def get(self, request):
         pass
@@ -111,14 +111,6 @@ class BookManage(APIView):
         else:
             return Response("권한이 없음")
         # 예약을 취소하기 
-
-    
-
-class RoomViewAPI(APIView):
-    pass
-
-
-
 
 
 
