@@ -3,18 +3,18 @@ from hotels.models import Rooms, Book
 
 
 class BookSerializer(serializers.ModelSerializer):
-    class Meta():
+    class Meta:
         model = Book
         fields = '__all__'
 
 
 
 class RoomSerializer(serializers.ModelSerializer):
-    class Meta():
+    class Meta:
         model = Rooms
         fields = '__all__'
 
 
 class SearchSerializer(serializers.ModelSerializer):
-    class Meta():
+    class Meta:
         pass
