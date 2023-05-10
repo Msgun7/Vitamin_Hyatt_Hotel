@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 
-# from hotels.models import Book, Rooms
-
 
 class User(models.Model):
     name = models.CharField(max_length=20)
@@ -12,20 +10,14 @@ class User(models.Model):
 
 class Review(models.Model):
     user = models.ForeignKey('users.User', on_delete=models.CASCADE)
-<<<<<<< HEAD
-    # booked = models.ForeignKey('book.Book', on_delete=models.CASCADE, related_name='booked_users')
-    # room = models.ForeignKey('rooms.Rooms', on_delete=models.CASCADE)
-=======
     booked = models.ForeignKey('rooms.Book',on_delete=models.CASCADE, related_name='booked_users')
     room = models.ForeignKey('rooms.Rooms', on_delete=models.CASCADE, related_name='reviews')
->>>>>>> ea234cf (review기능 추가 및 mypage 조회 기능 추가)
     title = models.CharField(max_length=50)
     context = models.TextField(max_length=255)
     stars = models.PositiveIntegerField(default=0)
     point = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-<<<<<<< HEAD
 
 
 class UserManager(BaseUserManager):
@@ -84,7 +76,18 @@ class User(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.is_admin
-=======
+
     def __str__(self):
         return str(self.title)
->>>>>>> ea234cf (review기능 추가 및 mypage 조회 기능 추가)
+
+
+
+class Review():
+    # room
+    user = models.ForeignKey() #나중에 추가 
+    # booked
+    title = models.CharField()
+    content = models.TextField()
+    stars = models.IntegerChoices([1, 2, 3, 4, 5] , null=True)
+    create_at = models.DateTimeField(auto_now_add=True)
+
