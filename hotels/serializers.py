@@ -1,5 +1,6 @@
+from rest_framework.serializers import ValidationError
 from rest_framework import serializers
-from hotels.models import Rooms, Book
+from .models import Rooms, Book, Spots
 
 
 class BookSerializer(serializers.ModelSerializer):
@@ -7,14 +8,27 @@ class BookSerializer(serializers.ModelSerializer):
         model = Book
         fields = '__all__'
 
+class RoomsSerializer(serializers.ModelSerializer):
 
-
-class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rooms
         fields = '__all__'
 
 
-class SearchSerializer(serializers.ModelSerializer):
+
+class DetailSerializer(serializers.ModelSerializer):
     class Meta:
-        pass
+        model = Rooms
+        fields = '__all__'
+
+    def update(self, instance, validated_data):
+        room = super().update(instance, validated_data)
+        room.save()
+        return room
+
+
+class SpotSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Spots
+        fields = '__all__'
+

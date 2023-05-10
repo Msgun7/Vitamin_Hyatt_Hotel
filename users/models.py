@@ -6,7 +6,6 @@ from hotels.models import Rooms, Book
 
 
 
-
 class UserManager(BaseUserManager): 
     def create_user(self, email, password=None):
         if not email:

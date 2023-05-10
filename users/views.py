@@ -12,6 +12,7 @@ from .serializers import ReviewSerializer
 
 class ReviewList(ListCreateAPIView):
     queryset = Review.objects.all()
+
     serializer_class = ReviewSerializer
 
 class UserView(APIView):
@@ -21,4 +22,4 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     pass
     
 class UserProfileView(APIView):
-    pass
+    serializer_class = ReviewSerializer

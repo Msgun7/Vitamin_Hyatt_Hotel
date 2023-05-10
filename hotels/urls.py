@@ -1,8 +1,10 @@
-from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 from hotels import views
 
 urlpatterns = [
-    path('room/',views.RoomView.as_view(), name='room'),
-    path('book/',views.RoomView.as_view(), name='book'),
+    path('rooms/', views.RoomViewAPI.as_view()),
+    path('rooms/spot/', views.RoomViewAPI.as_view()),
+    path('rooms/<int:room_id>/', views.DetailRoomViewAPI.as_view()),
+    path('customers/<int:room_id>/', views.BookUsersViewAPI.as_view()),
 ]
+
