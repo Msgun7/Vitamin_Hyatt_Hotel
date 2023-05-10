@@ -118,3 +118,4 @@ class BookManage(APIView):
             return Response("예약 취소됨", status=status.HTTP_204_NO_CONTENT)
         else:
             return Response("권한이 없음")
+

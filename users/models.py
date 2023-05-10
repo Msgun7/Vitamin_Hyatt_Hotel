@@ -31,6 +31,7 @@ class User(AbstractBaseUser):
         max_length=255,
         unique=True,
     )
+
     username = models.CharField(max_length=255,null=False)
     phone = models.CharField(max_length=255,null=False) 
     point = models.IntegerField(default= 0)
@@ -53,7 +54,6 @@ class User(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
     
-
 class BasicUser(models.Model):
     basic_user = models.OneToOneField(User, on_delete=models.CASCADE)
     point = models.IntegerField(blank=True, default=0)

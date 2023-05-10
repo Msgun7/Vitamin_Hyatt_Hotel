@@ -38,4 +38,3 @@ class BasicUserProfileSerializer(serializers.ModelSerializer):
         fields = '__all__'
         # fields = ('id','email','username', 'phone','point',)
 
-

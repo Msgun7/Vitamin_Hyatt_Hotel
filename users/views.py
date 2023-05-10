@@ -2,16 +2,18 @@ from rest_framework.views import APIView
 from reviews.models import Review
 from reviews.serializers import ReviewSerializer
 from hotels.serializers import BookSerializer
-from rest_framework.views import APIView
 from .models import User, BasicUser
 from hotels.models import Rooms
+from .models import Review, User, BasicUser
 from rest_framework.generics import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import (
     TokenObtainPairView
 )
+
 from users.serializers import UserSerializer,LoginSerializer,BasicUserProfileSerializer
+
 
 
 class SignupView(APIView):
@@ -55,7 +57,7 @@ class BasicUserProfileView(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response('권한이 없습니다!', status=status.HTTP_403_FORBIDDEN)
-        
+
 
     def delete(self, request, user_id):
         user = get_object_or_404(User, basic_user_id=user_id)
