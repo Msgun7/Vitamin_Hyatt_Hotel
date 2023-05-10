@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from .models import Rooms, Book, Spots
 
 
-class RoomViewAPI(APIView):
+class RoomView(APIView):
     def get(self, request):
         rooms = Rooms.objects.all()
         serializer = RoomsSerializer(rooms, many=True)
