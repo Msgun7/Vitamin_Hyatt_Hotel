@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 
-class UserManager(BaseUserManager): 
+
+class UserManager(BaseUserManager):
     def create_user(self, email, password=None):
         if not email:
             raise ValueError("Users must have an email address")
@@ -14,7 +15,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password=None): 
+    def create_superuser(self, email, password=None):
         user = self.create_user(
             email,
             password=password,
@@ -22,16 +23,20 @@ class UserManager(BaseUserManager):
         user.is_admin = True
         user.save(using=self._db)
         return user
-    
-class User(AbstractBaseUser): 
+
+
+class User(AbstractBaseUser):
     email = models.EmailField(
         verbose_name="email address",
         max_length=255,
         unique=True,
     )
+
     username = models.CharField(max_length=255,null=False) 
     phone = models.CharField(max_length=255,null=False) 
+    point = models.IntegerField(default= 0)
     created_at = models.DateTimeField(auto_now_add=True)
+
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=True)
@@ -68,6 +73,9 @@ class AdminUser(models.Model):
     @property
     def is_staff(self):
         return self.is_admin
+
+
+
 
 
 

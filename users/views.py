@@ -4,6 +4,7 @@ from reviews.models import Review
 from reviews.serializers import ReviewSerializer
 from hotels.serializers import BookSerializer
 from rest_framework.generics import get_object_or_404
+from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import (
@@ -50,8 +51,6 @@ class BasicUserProfileView(APIView):
             return Response('삭제되었습니다!', status=status.HTTP_204_NO_CONTENT)
         else:
             return Response("권한이 없습니다!", status=status.HTTP_403_FORBIDDEN)   
-
-
 
 
 # 마이페이지 내 리뷰 조회, 내 예약 조회
