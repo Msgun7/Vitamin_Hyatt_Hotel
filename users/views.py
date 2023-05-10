@@ -1,7 +1,8 @@
 from rest_framework.views import APIView
 from .models import Review, User,BasicUser
 from hotels.models import Rooms
-from .serializers import ReviewSerializer,ReviewCreateSerializer,BookSerializer,RoomSerializer
+from .serializers import ReviewSerializer,ReviewCreateSerializer
+from hotels.serializers import BookSerializer,RoomsSerializer
 from rest_framework.generics import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
@@ -53,7 +54,7 @@ class BasicUserProfileView(APIView):
 class RoomDetailReviewList(APIView):
     def get(self, request, room_id):
         room_review = get_object_or_404(Rooms, id=room_id)
-        serializer = RoomSerializer(room_review)
+        serializer = RoomsSerializer(room_review)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 

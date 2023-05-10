@@ -69,3 +69,5 @@ admin.site.register(AdminUser)
 admin.site.unregister(Group)
 
 admin.site.register(Review)
+
+

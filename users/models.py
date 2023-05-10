@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
-from hotels.models import Rooms, Book
 
 class UserManager(BaseUserManager): 
     def create_user(self, email, password=None):
@@ -33,8 +32,8 @@ class User(AbstractBaseUser):
     phone = models.CharField(max_length=255,null=False) 
     created_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=True)
+    is_admin = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
     
     objects = UserManager()
     
@@ -72,8 +71,8 @@ class AdminUser(models.Model):
 
 class Review(models.Model):
     user = models.ForeignKey('users.User', on_delete=models.CASCADE)
-    booked = models.ForeignKey('rooms.Book',on_delete=models.CASCADE, related_name='booked_users')
-    room = models.ForeignKey('rooms.Rooms', on_delete=models.CASCADE, related_name='reviews')
+    booked = models.ForeignKey('hotels.Book',on_delete=models.CASCADE, related_name='booked_users')
+    room = models.ForeignKey('hotels.Rooms', on_delete=models.CASCADE, related_name='reviews')
     title = models.CharField(max_length=50)
     context = models.TextField(max_length=255)
     stars = models.PositiveIntegerField(default=0)
