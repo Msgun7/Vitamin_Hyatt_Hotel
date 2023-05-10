@@ -4,7 +4,6 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
-
 from users.models import User,BasicUser,AdminUser
 
 class UserCreationForm(forms.ModelForm):
@@ -66,3 +65,4 @@ admin.site.register(User, UserAdmin)
 admin.site.register(BasicUser)
 admin.site.register(AdminUser)
 admin.site.unregister(Group)
+

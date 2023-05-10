@@ -7,3 +7,4 @@ urlpatterns = [
     path('profile/<int:user_id>/', views.BasicUserProfileView.as_view(), name='profile')
 #     path('profile/<int:user_id>', views.MyPage.as_view())
 ]
+

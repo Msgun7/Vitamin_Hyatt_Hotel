@@ -21,7 +21,8 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         return user
-    
+
+
 class LoginSerializer(TokenObtainPairSerializer): 
     @classmethod
     def get_token(cls, user):
@@ -29,7 +30,8 @@ class LoginSerializer(TokenObtainPairSerializer):
         token['email'] = user.email
         token['username'] = user.username
         return token
-    
+
+
 class BasicUserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = BasicUser
