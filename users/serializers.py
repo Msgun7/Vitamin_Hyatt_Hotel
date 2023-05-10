@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import User, Review
 from hotels.models import Rooms, Book
 
+
 class RoomSerializer(serializers.ModelSerializer):
     reviews = serializers.StringRelatedField(many=True,read_only=True)
   
@@ -21,11 +22,13 @@ class ReviewSerializer(serializers.ModelSerializer):
             'booked': {'read_only': True},
         }
 
+
 class ReviewCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Review
         fields = ('title', 'context', 'stars')
+
 
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
