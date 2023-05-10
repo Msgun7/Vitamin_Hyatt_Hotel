@@ -29,6 +29,7 @@ class Rooms(models.Model):
         return reverse('todo_detail_view', kwargs={'room_id': self.id})
 from django import reverse
 
+
 class Book(models.Model):
     # user = models.ForeignKey(Users, on_delete=models.CASCADE)
     # room = models.ForeignKey(Rooms, on_delete=models.CASCADE)
