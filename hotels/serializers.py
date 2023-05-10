@@ -30,7 +30,6 @@ class DetailSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         room = super().update(instance, validated_data)
-        print(instance, validated_data)
         room.save()
         return room
 
@@ -43,6 +42,7 @@ class SpotSerializer(serializers.ModelSerializer):
         all_rooms = Rooms.objects.filter(spot=obj)
         rooms = RoomsSerializer(all_rooms, many=True)
         return rooms.data
+
 
     class Meta:
         model = Spots
