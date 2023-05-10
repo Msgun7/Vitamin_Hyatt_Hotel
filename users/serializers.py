@@ -67,3 +67,13 @@ class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
         fields = ('id','user')
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ['user', 'booked', 'room', 'title', 'context', 'stars']
+        # extra_kwargs = {
+        #     'user': {'read_only': True},
+        #     'booked': {'read_only': True},
+        #     'room': {'read_only': True},
+        # }
