@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-
+from users.models import User
 
 class Book(models.Model):
     # user = models.ForeignKey(Users, on_delete=models.CASCADE)
@@ -40,3 +40,16 @@ class Rooms(models.Model):
     def get_absolute_url(self):
         return reverse('todo_detail_view', kwargs={'room_id': self.id})
 
+<<<<<<< HEAD
+=======
+    def __str__(self):
+        return self.name
+
+class Book(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    room = models.ForeignKey(Rooms, on_delete=models.CASCADE)
+    create_at = models.DateTimeField(auto_now=True)
+    members = models.IntegerField()
+    check_in = models.DateField(auto_now=True)
+    check_out = models.DateField(auto_now=True)
+>>>>>>> 2030fc6 (view.py 뼈대랑 간단한 내용들 작성)
