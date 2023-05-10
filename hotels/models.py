@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from users.models import User
 
+
 class Book(models.Model):
     # user = models.ForeignKey(Users, on_delete=models.CASCADE)
     # room = models.ForeignKey(Rooms, on_delete=models.CASCADE)
