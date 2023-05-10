@@ -52,3 +52,9 @@ class SpotSerializer(serializers.ModelSerializer):
         spot = super().update(instance, validated_data)
         spot.save()
         return spot
+
+
+class BookSerializer(serializers.ModelSerializer):
+    class Meta():
+        model = Book
+        fields = '__all__'
