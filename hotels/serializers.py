@@ -1,5 +1,4 @@
 from rest_framework import serializers
-<<<<<<< HEAD
 from rest_framework.serializers import ValidationError
 from .models import Rooms, Book, Spots
 from .validators import check_existing_room
@@ -53,43 +52,3 @@ class SpotSerializer(serializers.ModelSerializer):
         spot.save()
         return spot
 
-=======
-from hotels.models import Rooms, Book
-
-
-class RoomsSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = Rooms
-        fields = '__all__'
-<<<<<<< HEAD
->>>>>>> 2030fc6 (view.py 뼈대랑 간단한 내용들 작성)
-=======
-
-
-class SearchSerializer(serializers.ModelSerializer):
-<<<<<<< HEAD
-    class Meta():
-        pass
->>>>>>> d5fd653 (UPDATE View.py and Serializer)
-=======
-    class Meta:
-        pass
-
-
-class DetailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Rooms
-        fields = '__all__'
-
-    def update(self, instance, validated_data):
-        room = super().update(instance, validated_data)
-        room.save()
-        return room
-
-
-class SpotSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Spots
-        fields = '__all__'
-
->>>>>>> 0dcc30a (fix hetels.view)
