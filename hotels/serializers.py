@@ -46,9 +46,12 @@ class SpotSerializer(serializers.ModelSerializer):
     class Meta:
         model = Spots
         fields = '__all__'
+<<<<<<< HEAD
 
     def update(self, instance, validated_data):
         spot = super().update(instance, validated_data)
         spot.save()
         return spot
 
+=======
+>>>>>>> ff383e3 (merge)

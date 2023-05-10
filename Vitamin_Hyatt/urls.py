@@ -5,6 +5,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     path('manager/', include("hotels.urls")),
     path('users/', include('users.urls')),
 =======
@@ -12,7 +13,12 @@ urlpatterns = [
     path('manager/', include("hotels.urls")),
 >>>>>>> 0dcc30a (fix hetels.view)
 =======
+=======
+>>>>>>> fc034b8 (fix hetels.view)
     path('users/', include('users.urls')),
+=======
+    # path('users/', include("users.urls")),
+>>>>>>> ff383e3 (merge)
     path('manager/', include("hotels.urls")),
 =======
     path('users/', include("users.urls")),
