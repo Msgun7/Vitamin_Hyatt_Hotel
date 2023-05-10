@@ -57,8 +57,7 @@ class SpotSerializer(serializers.ModelSerializer):
 from hotels.models import Rooms, Book
 
 
-
-class RoomsSerializer(serializers.ModelSerializer):
+class RoomsSerializers(serializers.ModelSerializer):
     class Meta:
         model = Rooms
         fields = '__all__'
