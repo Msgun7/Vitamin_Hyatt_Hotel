@@ -113,7 +113,81 @@ class BookManage(APIView):
         # 예약을 취소하기 
 
 
+<<<<<<< HEAD
+=======
+class RoomViewAPI():
+=======
+class RoomViewAPI(APIView):
+<<<<<<< HEAD
+>>>>>>> ff383e3 (merge)
+    def post(self, request):
+        serializer = RoomsSerializer(data=request.data)
+        if serializer.is_valid():
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+=======
+>>>>>>> 5648429 (Success room_save_delet_get)
+    def get(self, request):
+        rooms = Rooms.objects.all()
+        serializer = RoomsSerializer(rooms, many=True)
+        return Response(serializer.data)
+>>>>>>> e5e2aa1 (fix hetels.view)
+
+    def post(self, request):
+        serializer = RoomsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+<<<<<<< HEAD
 
 
+=======
+# 방 정보 수정 및 삭제
+class DetailRoomViewAPI(APIView):
+    # permission_classes = [permissions.IsAuthenticated]
+    def get_object(self, request, room_id):
+        room = get_object_or_404(Rooms, id=room_id)
+        return room
+
+    def put(self, request, room_id):
+        room = self.get_object(request, room_id)
+        serializer = DetailSerializer(room, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, room_id):
+        room = self.get_object(request, room_id)
+        room.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class BookUsersViewAPI(APIView):
+    def get(self, request, room_id):
+        booked_all_rooms = get_object_or_404(Book, id=room_id)
+        serializer = RoomsSerializer(booked_all_rooms, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# 지점 생성 및 조회
+class SpotViewAPI(APIView):
+    def get(self, request):
+        spots = Spots.objects.all()
+        serializer = SpotSerializer(spots, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        serializer = SpotSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+>>>>>>> e5e2aa1 (fix hetels.view)

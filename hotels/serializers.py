@@ -30,6 +30,7 @@ class DetailSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         room = super().update(instance, validated_data)
+        print(instance, validated_data)
         room.save()
         return room
 
