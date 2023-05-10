@@ -1,4 +1,3 @@
-from .serializers import DetailSerializer, RoomsSerializer, SpotSerializer
 from .serializers import DetailSerializer, RoomsSerializers, SpotSerializer
 from rest_framework.generics import get_object_or_404
 from rest_framework import status, permissions
@@ -112,6 +111,7 @@ class BookManage(APIView):
         else:
             return Response("권한이 없음")
         # 예약을 취소하기 
+
 
 
 
