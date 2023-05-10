@@ -1,3 +1,4 @@
+from django.shortcuts import redirect
 from rest_framework.views import APIView
 from .models import Review, User, BasicUser
 from hotels.models import Rooms
@@ -23,6 +24,16 @@ class SignupView(APIView):
 
 class LoginView(TokenObtainPairView):
     serializer_class = LoginSerializer
+
+
+# 일반 회원 관리자 나누는 로직 -> 로그인 할 때 판단
+class Test(APIView):
+    def post(self, request):
+        if request.user.is_staff == True:
+            pass
+        else:
+            pass
+        return redirect('/users/login')
 
 
 class BasicUserProfileView(APIView):

@@ -43,7 +43,6 @@ class SpotSerializer(serializers.ModelSerializer):
         rooms = RoomsSerializer(all_rooms, many=True)
         return rooms.data
 
-
     class Meta:
         model = Spots
         fields = '__all__'
