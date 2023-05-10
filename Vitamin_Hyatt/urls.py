@@ -6,3 +6,5 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path('hotels/', include('hotels.urls')),
 ]
+
+
