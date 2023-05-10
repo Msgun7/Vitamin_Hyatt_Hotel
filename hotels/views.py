@@ -113,18 +113,6 @@ class BookManage(APIView):
         # 예약을 취소하기 
 
 
-class RoomViewAPI(APIView):
-    def get(self, request):
-        rooms = Rooms.objects.all()
-        serializer = RoomsSerializer(rooms, many=True)
-        return Response(serializer.data)
 
-    def post(self, request):
-        serializer = RoomsSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
