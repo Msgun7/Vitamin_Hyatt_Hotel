@@ -31,18 +31,20 @@ class User(AbstractBaseUser):
         max_length=255,
         unique=True,
     )
-    username = models.CharField(max_length=255, null=False)
-    phone = models.CharField(max_length=255, null=False)
+
+    username = models.CharField(max_length=255,null=False)
+    phone = models.CharField(max_length=255,null=False) 
+    point = models.IntegerField(default= 0)
     created_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=True)
 
     objects = UserManager()
-
+    
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
-
+    
     def __str__(self):
         return self.email
 
@@ -51,8 +53,7 @@ class User(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
-
-
+    
 class BasicUser(models.Model):
     basic_user = models.OneToOneField(User, on_delete=models.CASCADE)
     point = models.IntegerField(blank=True, default=0)
@@ -74,19 +75,6 @@ class AdminUser(models.Model):
         return self.is_admin
 
 
-class Review(models.Model):
-    user = models.ForeignKey('users.User', on_delete=models.CASCADE)
-    booked = models.ForeignKey('hotels.Book', on_delete=models.CASCADE, related_name='booked_users')
-    room = models.ForeignKey('hotels.Rooms', on_delete=models.CASCADE, related_name='reviews')
-    title = models.CharField(max_length=50)
-    context = models.TextField(max_length=255)
-    stars = models.PositiveIntegerField(default=0)
-    point = models.PositiveIntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return str(self.title)
 
 
 
