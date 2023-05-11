@@ -3,6 +3,10 @@ from rest_framework import serializers
 from .models import Rooms, Book, Spots
 from .validators import check_existing_room
 
+class BookSerializer(serializers.ModelSerializer):
+    class Meta():
+        model = Book
+        fields = '__all__'
 
 class RoomsSerializer(serializers.ModelSerializer):
 
@@ -44,7 +48,6 @@ class SpotSerializer(serializers.ModelSerializer):
         all_rooms = Rooms.objects.filter(spot=obj)
         rooms = RoomsSerializer(all_rooms, many=True)
         return rooms.data
-
 
     class Meta:
         model = Spots

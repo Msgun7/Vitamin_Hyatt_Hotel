@@ -5,14 +5,17 @@ from users.models import User
 
 
 
+
 class Spots(models.Model):
     name = models.CharField(max_length=100, unique=True)
     call_number = models.CharField(max_length=100)
     location = models.CharField(max_length=200)
 
+    def get_absolute_url(self):
+        return reverse('spot_detail_view', kwargs={'spot_id': self.id})
+
     def __str__(self):
         return self.name
-
 
 # null, blank
 class Rooms(models.Model):
@@ -29,7 +32,7 @@ class Rooms(models.Model):
     status = models.CharField(choices=all_status, max_length=10)
 
     def get_absolute_url(self):
-        return reverse('todo_detail_view', kwargs={'room_id': self.id})
+        return reverse('detail_room_view', kwargs={'room_id': self.id})
 
     def __str__(self):
         return self.name
@@ -44,4 +47,5 @@ class Book(models.Model):
 
     # def __str__(self):
     #     return self.user
+
 
