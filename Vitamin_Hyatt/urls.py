@@ -7,5 +7,3 @@ urlpatterns = [
     path('manager/', include('hotels.urls')),
     path('reviews/', include('reviews.urls'))
 ]
-
-

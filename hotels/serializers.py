@@ -3,6 +3,10 @@ from rest_framework.serializers import ValidationError
 from .models import Rooms, Book, Spots
 from .validators import check_existing_room
 
+class BookSerializer(serializers.ModelSerializer):
+    class Meta():
+        model = Book
+        fields = '__all__'
 
 class RoomsSerializer(serializers.ModelSerializer):
     class Meta:
