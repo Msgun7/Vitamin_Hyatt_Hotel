@@ -1,5 +1,5 @@
-from rest_framework import serializers
 from rest_framework.serializers import ValidationError
+from rest_framework import serializers
 from .models import Rooms, Book, Spots
 from .validators import check_existing_room
 
@@ -9,6 +9,7 @@ class BookSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class RoomsSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Rooms
         fields = '__all__'
@@ -19,6 +20,7 @@ class RoomsSerializer(serializers.ModelSerializer):
         if check_existing_room(name=attrs['name'], spot=attrs['spot']):
             raise ValidationError('이미 존재 하는 Room입니다!')
         return attrs
+
 
 
 class DetailSerializer(serializers.ModelSerializer):
@@ -57,7 +59,22 @@ class SpotSerializer(serializers.ModelSerializer):
         return spot
 
 
+
 class BookSerializer(serializers.ModelSerializer):
+    # user = serializers.IntegerField(required=False)
+    # room = serializers.IntegerField(required=False)
+
+    def get_user(self, obj):
+        print(obj.user.email)
+        return obj.user.email
+
     class Meta():
+        extra_kwargs = {"user": {"required":False}, "room": {"required":False}}
         model = Book
         fields = '__all__'
+
+
+class BookViewSerializer(serializers.ModelSerializer):
+    class Meta():
+        model = Book
+        fields ='__all__'

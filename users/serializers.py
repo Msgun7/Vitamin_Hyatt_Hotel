@@ -3,6 +3,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from users.models import User
 from .validators import check_phone, check_password
 
+
 class UserSerializer(serializers.ModelSerializer):
     
     class Meta:
