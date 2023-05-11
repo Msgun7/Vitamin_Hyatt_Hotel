@@ -88,25 +88,38 @@ class SpotViewAPI(APIView):
 
 
 class BookManage(APIView):
-    def get(self, request):
-        pass
+    def get(self, request, pk):
+        all_books = get_object_or_404(Book, id=pk)
+        serializer = BookSerializer(all_books)
+        return Response(serializer.data)
 
-    def post(self, request):
-        # 예약하기
-        if request.check_in in Book:
-            return Response('이미 예약이 잡힌 날짜')
-        else :
-            serializer = BookSerializer(data = request.data)
-            serializer.save()
-
-        return Response('예약을 위한 post 요청')
+    def post(self, request, pk):
+        
+        # 예약하기 기능
+        # 예약한 방에 같은 날짜의 예약이 없으면 예약 오브젝트 하나 생성
+        # 예약 오브젝트는 예약한 사람, 예약한 방, 예약날짜(check_in)을 속성으로 가짐
+        print(f"리퀘스트{request.data}")
+        room = get_object_or_404(Rooms, id=pk)
+        serializer = BookSerializer(data = request.data)
+        # room.bookset 뒤에 오브젝트 쓸 필요없음
+        # = Book.objects.
+        if serializer.is_valid():
+            if not room.bookset.filter(room=pk, check_in=request.data["check_in"]).exists():
+                serializer.save(user=request.user, room=room)
+                # print(f'시리얼라이저{serializer.data}')
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response('예약할 수 없음')
+        else:
+            return Response(serializer.errors)
+       
         # 같은 check_in 이 있으면 예약이 불가합니다.
         # check_in은 날짜 테이블 DateField 입니다.
         # 예를 들어 10일을 예약한다 하면 예약 오브젝트가 10개가 생김...
         # 개선의 여지 ? 
-
-    def delete(self, request, user_id):
-        book = get_object_or_404(Book, id=user_id)
+    
+    def delete(self, request, pk):
+        book = get_object_or_404(Book, id=pk)
         if request.user == book.user:
             book.delete()
             return Response("예약 취소됨", status=status.HTTP_204_NO_CONTENT)

@@ -58,7 +58,20 @@ class SpotSerializer(serializers.ModelSerializer):
 
 
 class BookSerializer(serializers.ModelSerializer):
+    # user = serializers.IntegerField(required=False)
+    # room = serializers.IntegerField(required=False)
+
+    def get_user(self, obj):
+        print(obj.user.email)
+        return obj.user.email
+
     class Meta():
+        extra_kwargs = {"user": {"required":False}, "room": {"required":False}}
         model = Book
         fields = '__all__'
 
+
+class BookViewSerializer(serializers.ModelSerializer):
+    class Meta():
+        model = Book
+        fields ='__all__'
