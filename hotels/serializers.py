@@ -47,7 +47,6 @@ class SpotSerializer(serializers.ModelSerializer):
         rooms = RoomsSerializer(all_rooms, many=True)
         return rooms.data
 
-
     class Meta:
         model = Spots
         fields = '__all__'
@@ -57,6 +56,8 @@ class SpotSerializer(serializers.ModelSerializer):
         spot.save()
         return spot
 
-class SearchSerializer(serializers.ModelSerializer):
+
+class BookSerializer(serializers.ModelSerializer):
     class Meta():
-        pass
+        model = Book
+        fields = '__all__'

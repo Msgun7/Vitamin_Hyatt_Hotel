@@ -1,8 +1,8 @@
 from .serializers import DetailSerializer, RoomsSerializer, SpotSerializer, BookSerializer
 from rest_framework.generics import get_object_or_404
 from rest_framework import status, permissions
-from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.response import Response
 from .models import Rooms, Book, Spots
 
 
@@ -10,23 +10,29 @@ class RoomView(APIView):
     def get(self, request):
         rooms = Rooms.objects.all()
         serializer = RoomsSerializer(rooms, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
         serializer = RoomsSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # 방 정보 수정 및 삭제
 class DetailRoomViewAPI(APIView):
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
+
     def get_object(self, request, room_id):
         room = get_object_or_404(Rooms, id=room_id)
         return room
+
+    def get(self, request, room_id):
+        room = get_object_or_404(Rooms, id=room_id)
+        serializer = DetailSerializer(room)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def patch(self, request, room_id):
         room = self.get_object(request, room_id)
@@ -37,7 +43,6 @@ class DetailRoomViewAPI(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
     def delete(self, request, room_id):
         room = self.get_object(request, room_id)
         room.delete()
@@ -45,14 +50,17 @@ class DetailRoomViewAPI(APIView):
 
 
 class BookUsersViewAPI(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request, room_id):
         booked_all_rooms = get_object_or_404(Book, id=room_id)
-        serializer = RoomsSerializer(booked_all_rooms, many=True)
+        serializer = DetailSerializer(booked_all_rooms, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 # 지점 생성 및 조회
 class SpotViewAPI(APIView):
+    permission_classes = [permissions.IsAuthenticated]
     def get_object(self, request, spot_id):
         spot = get_object_or_404(Spots, id=spot_id)
         return spot
@@ -110,9 +118,4 @@ class BookManage(APIView):
             return Response("예약 취소됨", status=status.HTTP_204_NO_CONTENT)
         else:
             return Response("권한이 없음")
-        # 예약을 취소하기 
-
-
-
-
 
