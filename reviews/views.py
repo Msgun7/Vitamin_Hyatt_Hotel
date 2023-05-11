@@ -7,8 +7,6 @@ from rest_framework import status
 from rest_framework.response import Response   
 from rest_framework import permissions
 
-
-
     #숙소 상세 조회, 리뷰 조회
 class RoomDetail(APIView):
     def get(self, request, booked_id):
@@ -24,7 +22,6 @@ class RoomDetail(APIView):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response("권한이 없습니다.", status=status.HTTP_401_UNAUTHORIZED)
-
 
 # 숙소 리뷰 CRUD
 class ReviewDetail(APIView):

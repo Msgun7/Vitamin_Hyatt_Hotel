@@ -5,7 +5,6 @@ from .models import Rooms, Book, Spots
 from faker import Faker
 from .serializers import DetailSerializer, RoomsSerializer, SpotSerializer
 
-
 class RoomViewTest(APITestCase):
     @classmethod
     def setUpTestData(cls):
@@ -70,7 +69,6 @@ class RoomViewTest(APITestCase):
             url = room.get_absolute_url()
             response = self.client.delete(path=url, HTTP_AUTHORIZATION=f"Bearer {self.access_token}")
             self.assertEquals(response.status_code, 204)
-
 
 class SpotViewTest(APITestCase):
     @classmethod

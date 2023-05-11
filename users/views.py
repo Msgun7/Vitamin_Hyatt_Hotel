@@ -24,11 +24,21 @@ class SignupView(APIView):
 class LoginView(TokenObtainPairView):
     serializer_class=LoginSerializer
     
-class UserProfileView(APIView):
+# 마이페이지 내 리뷰 조회, 내 예약 조회
+class MyPage(APIView):
     def get(self, request, user_id):
         user_profile = get_object_or_404(User, id=user_id)
-        serializer = UserProfileSerializer(user_profile)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        review = Review.objects.filter(user=user_id)
+        book = Review.objects.filter(user=user_id)
+        serializer = ReviewSerializer(review, many=True)
+        bookserializer = BookSerializer(book, many=True)
+        profileserializer = UserProfileSerializer(user_profile)
+        data = {
+            'reviews': serializer.data,
+            'books': bookserializer.data,
+            'profile': profileserializer.data,
+        }
+        return Response(data, status=status.HTTP_200_OK)
     
     def put(self, request, user_id):
         user_profile = get_object_or_404(User, id=user_id)
@@ -48,17 +58,4 @@ class UserProfileView(APIView):
             user.delete()
             return Response('삭제되었습니다!', status=status.HTTP_204_NO_CONTENT)
         else:
-            return Response("권한이 없습니다!", status=status.HTTP_403_FORBIDDEN)   
-
-# 마이페이지 내 리뷰 조회, 내 예약 조회
-class MyPage(APIView):
-    def get(self, request, user_id):
-        review = Review.objects.filter(user=user_id)
-        book = Review.objects.filter(user=user_id)
-        serializer = ReviewSerializer(review, many=True)
-        bookserializer = BookSerializer(book, many=True)
-        data = {
-            'reviews': serializer.data,
-            'books': bookserializer.data,
-        }
-        return Response(data, status=status.HTTP_200_OK)
+            return Response("권한이 없습니다!", status=status.HTTP_403_FORBIDDEN)

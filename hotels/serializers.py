@@ -20,7 +20,6 @@ class RoomsSerializer(serializers.ModelSerializer):
             raise ValidationError('이미 존재 하는 Room입니다!')
         return attrs
 
-
 class DetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rooms
@@ -36,7 +35,6 @@ class DetailSerializer(serializers.ModelSerializer):
         room = super().update(instance, validated_data)
         room.save()
         return room
-
 
 class SpotSerializer(serializers.ModelSerializer):
     all_room = serializers.SerializerMethodField()
