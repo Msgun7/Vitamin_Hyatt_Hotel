@@ -7,8 +7,6 @@ from rest_framework.serializers import ValidationError
 from .models import Rooms
 
 
-
-
 # 객실 등록에 있어 지점과 객실이름에 특수문자를 등록하지 못하게 유효성 검사를 하는 것
 def contains_special_character(name):
     name_regex = re.compile(r"^[a-zA-Z가-힣0-9\s]+$")
@@ -26,4 +24,3 @@ def validate_phone_number(phone_number):
             raise ValidationError('사용할 수 없는 전화번호입니다. - 과 함께 입력해주세요.')
     except phonenumbers.phonenumberutil.NumberParseException:
         raise ValidationError('사용할 수 없는 전화번호입니다.')
-
