@@ -1,5 +1,6 @@
+from django.shortcuts import redirect
 from rest_framework.views import APIView
-from .models import Review, User,BasicUser
+from users.models import Review, User
 from hotels.models import Rooms
 from .serializers import ReviewSerializer,ReviewCreateSerializer
 from hotels.serializers import BookSerializer,RoomsSerializer
@@ -9,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.views import (
     TokenObtainPairView
 )
-from users.serializers import UserSerializer,LoginSerializer,BasicUserProfileSerializer
+from users.serializers import UserSerializer,LoginSerializer,UserProfileSerializer,UserUpdateSerializer
 
 class SignupView(APIView):
      def post(self, request):
@@ -23,16 +24,16 @@ class SignupView(APIView):
 class LoginView(TokenObtainPairView):
     serializer_class=LoginSerializer
     
-class BasicUserProfileView(APIView):
+class UserProfileView(APIView):
     def get(self, request, user_id):
-        basic_user_profile = get_object_or_404(BasicUser, basic_user_id=user_id)
-        serializer = BasicUserProfileSerializer(basic_user_profile)
+        user_profile = get_object_or_404(User, id=user_id)
+        serializer = UserProfileSerializer(user_profile)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def put(self, request, user_id):
-        basic_user_profile = get_object_or_404(User, basic_user_id=user_id)
-        serializer = UserSerializer(basic_user_profile,data=request.data)
-        if request.user == basic_user_profile:
+        user_profile = get_object_or_404(User, id=user_id)
+        serializer = UserUpdateSerializer(user_profile,data=request.data,partial=True)
+        if request.user == user_profile:
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
@@ -42,7 +43,7 @@ class BasicUserProfileView(APIView):
             return Response('권한이 없습니다!', status=status.HTTP_403_FORBIDDEN)
         
     def delete(self, request, user_id):
-        user = get_object_or_404(User, basic_user_id=user_id)
+        user = get_object_or_404(User, id=user_id)
         if request.user == user:
             user.delete()
             return Response('삭제되었습니다!', status=status.HTTP_204_NO_CONTENT)
@@ -99,4 +100,3 @@ class MyPage(APIView):
             'books': bookserializer.data,
         }
         return Response(data, status=status.HTTP_200_OK)
-

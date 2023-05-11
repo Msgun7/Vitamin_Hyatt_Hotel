@@ -1,48 +1,50 @@
 from rest_framework import serializers
-from users.models import User, BasicUser, Review
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from hotels.models import Rooms, Book
-
+from users.models import User,AdminUser,Review
+from django.core.exceptions import ValidationError
+from .validators import check_phone, check_password,check_username
 
 class UserSerializer(serializers.ModelSerializer):
-    # password1 = serializers.CharField(write_only=True, required=True)
-    # password2 = serializers.CharField(write_only=True, required=True)
-    
-    # class Meta:
-    #     model = User
-    #     fields = '__all__'
-        
-    # def validate(self, data):
-    #     if data['password1'] != data['password2']:
-    #         raise serializers.ValidationError("The two password fields didn't match.")
-    #     return data
-        
-    # def create(self,validated_data):
-    #     validated_data.pop('password2')
-    #     user = User.objects.create_user(**validated_data)
-    #     password = user.password
-    #     user.set_password(validated_data['password1'])
-    #     user.save()
-    #     return user
     
     class Meta:
         model = User
         fields = '__all__'
         
+    password2 = serializers.CharField(write_only=True, required=True)
+     
+    def validate(self, data):
+        if data['password'] != data['password2']:
+            raise serializers.ValidationError("비밀번호와 비밀번호 확인이 일치하지않습니다!")
+        return data
+        
     def create(self,validated_data):
+        validated_data.pop('password2')
         user = super().create(validated_data)
         password = user.password
         user.set_password(password)
         user.save()
         return user
-
+    
+class UserUpdateSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = User
+        fields = ('password','phone',)       
+    
     def update(self,instance, validated_data):
+        if validated_data.get('password'):
+            check_password(validated_data['password'])
+        
+        if validated_data.get('phone'):
+            check_phone(validated_data['phone'])
+            
         user = super().update(instance,validated_data)
         password = user.password
         user.set_password(password)
         user.save()
         return user
-    
+        
 class LoginSerializer(TokenObtainPairSerializer): 
     @classmethod
     def get_token(cls, user):
@@ -51,13 +53,12 @@ class LoginSerializer(TokenObtainPairSerializer):
         token['username'] = user.username
         return token
     
-class BasicUserProfileSerializer(serializers.ModelSerializer):
+class UserProfileSerializer(serializers.ModelSerializer):
+    
     class Meta:
-        model = BasicUser
-        fields = '__all__'
-        # fields = ('id','email','username', 'phone','point',)
-
-
+        model = User
+        fields = ('username','email', 'phone','point',)
+    
 class RoomSerializer(serializers.ModelSerializer):
     reviews = serializers.StringRelatedField(many=True,read_only=True)
   

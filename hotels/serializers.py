@@ -39,13 +39,14 @@ class DetailSerializer(serializers.ModelSerializer):
 
 
 class SpotSerializer(serializers.ModelSerializer):
-    total_room = serializers.SerializerMethodField()
-    # test = DetailSerializer(many=True, read_only=True)
+    all_room = serializers.SerializerMethodField()
+    # total_room2 = DetailSerializer(many=True, read_only=True)
 
-    def get_total_room(self, obj):
-        all_rooms = Rooms.objects.filter(spot=obj).count()
-        print(all_rooms)
-        return all_rooms
+    def get_all_room(self, obj):
+        all_rooms = Rooms.objects.filter(spot=obj)
+        rooms = RoomsSerializer(all_rooms, many=True)
+        return rooms.data
+
 
     class Meta:
         model = Spots
