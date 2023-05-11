@@ -12,6 +12,10 @@ class RoomView(APIView):
         serializer = RoomsSerializer(rooms, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+
+class RoomViewAPI(APIView):
+
     def post(self, request):
         serializer = RoomsSerializer(data=request.data)
         if serializer.is_valid():
@@ -42,6 +46,7 @@ class DetailRoomViewAPI(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
     def delete(self, request, room_id):
         room = self.get_object(request, room_id)
@@ -94,6 +99,7 @@ class SpotViewAPI(APIView):
 
 
 class BookManage(APIView):
+
     def get(self, request):
         pass
 

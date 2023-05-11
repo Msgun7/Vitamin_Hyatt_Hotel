@@ -1,11 +1,36 @@
 from django.db import models
 from django.urls import reverse
 from users.models import User
+from django.core.validators import MinLengthValidator, MinValueValidator
+from .validators import contains_special_character, validate_phone_number
 
 
 class Spots(models.Model):
     name = models.CharField(max_length=100, unique=True)
     call_number = models.CharField(max_length=100)
+
+
+
+
+
+class Book(models.Model):
+    # user = models.ForeignKey(Users, on_delete=models.CASCADE)
+    # room = models.ForeignKey(Rooms, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    members = models.IntegerField(default=1)
+    check_in = models.DateField()
+    check_out = models.DateField()
+
+    # def __str__(self):
+    #     return self.user
+
+
+class Spots(models.Model):
+    name = models.CharField(max_length=100, unique=True, validators=[
+                            contains_special_character])
+    call_number = models.CharField(
+        max_length=100, validators=[validate_phone_number])
+
     location = models.CharField(max_length=200)
 
     def get_absolute_url(self):
@@ -21,10 +46,12 @@ class Rooms(models.Model):
         ('empty', 'empty'),
     ]
     spot = models.ForeignKey(Spots, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
-    description = models.TextField()
-    # image = models.ImageField()
-    price = models.IntegerField()
+    name = models.CharField(max_length=100, validators=[
+                            contains_special_character])
+    description = models.TextField(max_length=300, validators=[
+                                   MinLengthValidator(10)], error_messages="10자 이상 입력하셔야합니다.")
+    image = models.ImageField(null=True, blank=True)
+    price = models.IntegerField(validators=[MinValueValidator(0)], null=False)
     max_members = models.IntegerField()
     status = models.CharField(choices=all_status, max_length=10)
 
@@ -45,3 +72,4 @@ class Book(models.Model):
 
     # def __str__(self):
     #     return self.user
+

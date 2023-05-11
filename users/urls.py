@@ -1,3 +1,5 @@
+from django.contrib import admin
+from django.urls import path, include
 from django.urls import path
 from . import views
 
@@ -7,3 +9,4 @@ urlpatterns = [
     path('profile/<int:user_id>/', views.UserProfileView.as_view(), name='profile')
 #     path('profile/<int:user_id>', views.MyPage.as_view())
 ]
+
