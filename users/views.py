@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.views import (
     TokenObtainPairView
 )
+
 from users.serializers import UserSerializer,LoginSerializer,UserProfileSerializer,UserUpdateSerializer
 
 class SignupView(APIView):
@@ -24,6 +25,7 @@ class SignupView(APIView):
 class LoginView(TokenObtainPairView):
     serializer_class=LoginSerializer
     
+
 class UserProfileView(APIView):
     def get(self, request, user_id):
         user_profile = get_object_or_404(User, id=user_id)
