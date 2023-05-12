@@ -6,7 +6,6 @@ from rest_framework.response import Response
 from .models import Rooms, Book, Spots
 from hotels.serializers import RoomsSerializer, BookSerializer, DetailSerializer ,\
                                 SpotSerializer, BookUserListSerializer
-# Create your views here.
 from datetime import date
 
 
@@ -116,17 +115,6 @@ class BookManage(APIView):
     def post(self, request, pk):
         room = get_object_or_404(Rooms, id=pk)
         serializer = BookSerializer(data = request.data)
-
-        # 입실이 퇴실 보다 늦을 경우 FAil
-        test = Book.objects.filter(room=pk)
-        for i in test:
-            # db에 퇴실 날짜보다 예약하려는 입실 날짜가 작으면 안됨.?
-            if date(request.data['check_in']) > i.check_in:
-                if date(request.data['check_in']) < i.check_out:
-                    print('no')
-            elif date(request.data['check_in']) > i.check_in:
-                print('no')
-
         if serializer.is_valid():
             if not room.bookset.filter(room=pk, check_in=request.data["check_in"]).exists():
                 serializer.save(user=request.user, room=room)
@@ -143,6 +131,3 @@ class BookManage(APIView):
             return Response("예약 취소됨", status=status.HTTP_204_NO_CONTENT)
         else:
             return Response("권한이 없음")
-
-
-

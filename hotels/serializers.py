@@ -49,7 +49,7 @@ class DetailSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if attrs.get('max_members'):
             if attrs['max_members'] < 0 or attrs['max_members'] > 10:
-              raise ValidationError('인원은 1인 이상부터 가능 합니다! 최대 인원은 10명까지입니다.')
+                raise ValidationError('인원은 1인 이상부터 가능 합니다! 최대 인원은 10명까지입니다.')
         return attrs
 
     def update(self, instance, validated_data):
@@ -83,7 +83,8 @@ class BookSerializer(serializers.ModelSerializer):
         return obj.user.email
 
     class Meta():
-        extra_kwargs = {"user": {"required":False}, "room": {"required":False}}
+        extra_kwargs = {"user": {"required": False},
+                        "room": {"required": False}}
         model = Book
         fields = '__all__'
 
