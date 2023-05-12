@@ -6,11 +6,6 @@ from .validators import contains_special_character, validate_phone_number
 
 
 class Spots(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    call_number = models.CharField(max_length=100)
-
-
-class Spots(models.Model):
     name = models.CharField(max_length=100, unique=True, validators=[
                             contains_special_character])
     call_number = models.CharField(
@@ -24,7 +19,7 @@ class Spots(models.Model):
     def __str__(self):
         return self.name
 
-      
+
 # null, blank
 class Rooms(models.Model):
     all_status = [
@@ -47,15 +42,15 @@ class Rooms(models.Model):
     def __str__(self):
         return self.name
 
-      
+
 class Book(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    room = models.ForeignKey(Rooms, on_delete=models.CASCADE, related_name='bookset')
+    room = models.ForeignKey(
+        Rooms, on_delete=models.CASCADE, related_name='bookset')
     created_at = models.DateTimeField(auto_now_add=True)
     members = models.IntegerField(default=1)
     check_in = models.DateField()
     check_out = models.DateField()
 
     def __str__(self):
-        return self.user
-
+        return self.room.name

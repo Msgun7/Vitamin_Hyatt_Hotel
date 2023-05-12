@@ -3,8 +3,10 @@ from django.db import models
 
 class Review(models.Model):
     user = models.ForeignKey('users.User', on_delete=models.CASCADE)
-    booked = models.ForeignKey('hotels.Book',on_delete=models.CASCADE, related_name='booked_users')
-    room = models.ForeignKey('hotels.Rooms', on_delete=models.CASCADE, related_name='reviews')
+    booked = models.ForeignKey(
+        'hotels.Book', on_delete=models.CASCADE, related_name='booked_users')
+    room = models.ForeignKey(
+        'hotels.Rooms', on_delete=models.CASCADE, related_name='review_set')
     title = models.CharField(max_length=50)
     context = models.TextField(max_length=255)
     STAR_CHOICES = (
