@@ -2,22 +2,19 @@ asgiref==3.6.0
 autopep8==2.0.2
 backports.zoneinfo==0.2.1
 Django==4.2.1
+django-cors-headers==3.14.0
 django-dotenv==1.4.2
+django-phonenumber-field==7.1.0
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.2.2
-<<<<<<< HEAD
 Faker==18.7.0
-=======
 phonenumbers==8.13.11
+phonenumberslite==8.13.11
 Pillow==9.5.0
 pycodestyle==2.10.0
->>>>>>> fb743bc (객실 정보 유효성 검사구현)
 PyJWT==2.6.0
 python-dateutil==2.8.2
 pytz==2023.3
 six==1.16.0
 sqlparse==0.4.4
-<<<<<<< HEAD
-=======
 tomli==2.0.1
->>>>>>> b5ea39c (hotels 객실 정보 유효성 검사 구현)

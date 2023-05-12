@@ -8,7 +8,6 @@ from rest_framework.response import Response
 from rest_framework import permissions
 
 
-
     #숙소 상세 조회, 리뷰 조회
 class RoomDetail(APIView):
     def get(self, request, booked_id):

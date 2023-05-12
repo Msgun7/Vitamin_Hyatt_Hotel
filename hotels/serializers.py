@@ -2,20 +2,20 @@ from rest_framework import serializers
 from rest_framework.serializers import ValidationError
 from rest_framework import serializers
 from .models import Rooms, Book, Spots
-from .validators import check_existing_room
+from users.serializers import UserSerializer
+
+
+def check_existing_room(**kwargs):
+    existing_room = Rooms.objects.filter(
+        spot=kwargs['spot'],
+        name=kwargs['name'],
+
+    ).exists()
+    if existing_room:
+        return True
 
 
 class RoomsSerializer(serializers.ModelSerializer):
-
-    def check_existing_room(**kwargs):
-        existing_room = Rooms.objects.filter(
-            spot=kwargs['spot'],
-            name=kwargs['name'],
-
-        ).exists()
-        if existing_room:
-            return True
-
     class Meta:
         model = Rooms
         fields = '__all__'
@@ -33,8 +33,15 @@ class RoomsSerializer(serializers.ModelSerializer):
         return attrs
 
 
-
 class DetailSerializer(serializers.ModelSerializer):
+    book_set = serializers.SerializerMethodField()
+
+    def get_book_set(self, obj):
+        books = Book.objects.filter(room_id=obj.id)
+        # print(books)
+        book_list = BookSerializer(books, many=True)
+        return book_list.data
+
     class Meta:
         model = Rooms
         fields = '__all__'
@@ -69,7 +76,6 @@ class SpotSerializer(serializers.ModelSerializer):
         return spot
 
 
-
 class BookSerializer(serializers.ModelSerializer):
 
     def get_user(self, obj):
@@ -86,4 +92,30 @@ class BookViewSerializer(serializers.ModelSerializer):
     class Meta():
         model = Book
         fields ='__all__'
+
+
+class BookInfoSerializer(serializers.ModelSerializer):
+    user_set = serializers.SerializerMethodField()
+
+    def get_user_set(self, obj):
+        user = obj.user
+        user_list = UserSerializer(user)
+        return user_list.data
+
+    class Meta():
+        model = Book
+        fields = '__all__'
+
+
+class BookUserListSerializer(serializers.ModelSerializer):
+    book_set = serializers.SerializerMethodField()
+
+    def get_book_set(self, obj):
+        books = Book.objects.filter(room_id=obj.id)
+        book_list = BookInfoSerializer(books, many=True)
+        return book_list.data
+
+    class Meta:
+        model = Rooms
+        fields = ['name', 'book_set', 'status']
 
