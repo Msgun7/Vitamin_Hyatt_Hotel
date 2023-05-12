@@ -13,8 +13,8 @@ def check_password(password):
         raise ValidationError('8자 이상의 영문 대/소문자, 숫자, 특수문자 조합이어야 합니다!')           
     return password
 
-def check_phone(phone):
-    phone_regex = r"^01[0-9]-\d{3,4}-\d{4}$"
-    if not re.match(phone_regex, phone):
-        raise ValidationError('전화번호를 01*-****-**** 형식으로 입력해주세요!')
-    return phone
+# def check_phone(phone):
+#     phone_regex = r"^01[0-9]-\d{3,4}-\d{4}$"
+#     if not re.match(phone_regex, phone):
+#         raise ValidationError('전화번호를 01*-****-**** 형식으로 입력해주세요!')
+#     return phone

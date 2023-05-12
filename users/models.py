@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
-from .validators import check_password,check_phone,check_username
+from .validators import check_password,check_username
 
 class UserManager(BaseUserManager): 
     def create_user(self, email, password=None):
@@ -31,7 +31,7 @@ class User(AbstractBaseUser):
     )
     password = models.CharField(max_length=100, validators=[check_password])
     username = models.CharField(max_length=255,null=False, validators=[check_username]) 
-    phone = models.CharField(max_length=255,null=False, validators=[check_phone]) 
+    phone = models.CharField(max_length=255,null=False) 
     created_at = models.DateTimeField(auto_now_add=True)
     point = models.IntegerField(blank=True, default= 0)
     is_active = models.BooleanField(default=True)
