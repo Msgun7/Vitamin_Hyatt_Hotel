@@ -71,13 +71,9 @@ class MyPage(APIView):
         }
         return Response(data, status=status.HTTP_200_OK)
 
-
-class MyReviewCreate(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def post(self, request, booked_id):
-        book = get_object_or_404(Book, id=booked_id)  # booked_id에 해당하는 예약
-        print(book)
+    def post(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
+        book = Book.objects.filter(user=user_id)
         if book.user_id == request.user.id:  # user_id에 해당하는 예약자만 리뷰달 수 있게
             serializer = ReviewCreateSerializer(data=request.data)
             if serializer.is_valid(raise_exception=True):
