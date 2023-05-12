@@ -1,5 +1,4 @@
 import re
-from django.core.exceptions import ValidationError
 import phonenumbers
 # phonenumber pip install phonenumbers 필요 전화번호 유효성 검사에 있어 해외번호 또한 사용가능하게 하기 위해서 설치
 from rest_framework.serializers import ValidationError
@@ -13,7 +12,9 @@ def contains_special_character(name):
     return name
 
 
-# 전화번호의 유효성 Django의 모듈 phonenumbers를
+
+# 전화번호의 유효성 Django의 모듈 phonenumbers를 받아와 전화번호의 형식을 판단합니다.
+
 def validate_phone_number(phone_number):
     pattern_no_hyphen = re.compile(r"^(010|012|0133|015|"
                                    r"02|031|033|041|042|043|044|051|052|053|054|055|061|062|063|064)"

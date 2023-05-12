@@ -2,8 +2,6 @@ from rest_framework import serializers
 from rest_framework.serializers import ValidationError
 from rest_framework import serializers
 from .models import Rooms, Book, Spots
-from rest_framework.generics import get_object_or_404
-from datetime import datetime, date
 from users.serializers import UserSerializer
 
 
@@ -16,8 +14,9 @@ def check_existing_room(**kwargs):
     if existing_room:
         return True
 
-      
+
 class RoomsSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Rooms
         fields = '__all__'
@@ -96,12 +95,12 @@ class BookSerializer(serializers.ModelSerializer):
         if attrs["check_in"] == attrs["check_out"]:
             raise ValidationError('체크인 날짜는 체크아웃 날짜와 같으면 안됩니다..')
         return attrs
-        
+
 
 class BookViewSerializer(serializers.ModelSerializer):
     class Meta():
         model = Book
-        fields ='__all__'
+        fields = '__all__'
 
 
 class BookInfoSerializer(serializers.ModelSerializer):

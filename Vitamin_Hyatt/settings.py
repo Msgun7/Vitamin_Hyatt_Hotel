@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     'users',
     'hotels',
     'reviews',
-    "corsheaders"
+    "corsheaders",
 ]
 
 REST_FRAMEWORK = {
@@ -131,6 +131,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+CORS_ALLOW_ALL_ORIGINS = True
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
@@ -178,4 +179,3 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
-CORS_ORIGIN_ALLOW_ALL = True

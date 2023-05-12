@@ -8,7 +8,8 @@ from .validators import contains_special_character, validate_phone_number
 class Spots(models.Model):
     name = models.CharField(max_length=100, unique=True, validators=[
         contains_special_character])
-    call_number = models.CharField(validators=[validate_phone_number], max_length=20, unique=True)
+    call_number = models.CharField(
+        validators=[validate_phone_number], max_length=20, unique=True)
 
     location = models.CharField(max_length=200)
 
@@ -48,9 +49,8 @@ class Book(models.Model):
         Rooms, on_delete=models.CASCADE, related_name='bookset')
     created_at = models.DateTimeField(auto_now_add=True)
     members = models.IntegerField(default=1)
-    check_in = models.DateField() 
+    check_in = models.DateField()
     check_out = models.DateField()
 
     def __str__(self):
         return self.room.name
-
