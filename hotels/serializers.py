@@ -2,20 +2,19 @@ from rest_framework import serializers
 from rest_framework.serializers import ValidationError
 from rest_framework import serializers
 from .models import Rooms, Book, Spots
-from .validators import check_existing_room
+
+
+def check_existing_room(**kwargs):
+    existing_room = Rooms.objects.filter(
+        spot=kwargs['spot'],
+        name=kwargs['name'],
+
+    ).exists()
+    if existing_room:
+        return True
 
 
 class RoomsSerializer(serializers.ModelSerializer):
-
-    def check_existing_room(**kwargs):
-        existing_room = Rooms.objects.filter(
-            spot=kwargs['spot'],
-            name=kwargs['name'],
-
-        ).exists()
-        if existing_room:
-            return True
-
     class Meta:
         model = Rooms
         fields = '__all__'
@@ -33,7 +32,6 @@ class RoomsSerializer(serializers.ModelSerializer):
         return attrs
 
 
-
 class DetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rooms
@@ -42,7 +40,7 @@ class DetailSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if attrs.get('max_members'):
             if attrs['max_members'] < 0 or attrs['max_members'] > 10:
-              raise ValidationError('인원은 1인 이상부터 가능 합니다! 최대 인원은 10명까지입니다.')
+                raise ValidationError('인원은 1인 이상부터 가능 합니다! 최대 인원은 10명까지입니다.')
         return attrs
 
     def update(self, instance, validated_data):
@@ -69,7 +67,6 @@ class SpotSerializer(serializers.ModelSerializer):
         return spot
 
 
-
 class BookSerializer(serializers.ModelSerializer):
 
     def get_user(self, obj):
@@ -77,13 +74,7 @@ class BookSerializer(serializers.ModelSerializer):
         return obj.user.email
 
     class Meta():
-        extra_kwargs = {"user": {"required":False}, "room": {"required":False}}
+        extra_kwargs = {"user": {"required": False},
+                        "room": {"required": False}}
         model = Book
         fields = '__all__'
-
-
-class BookViewSerializer(serializers.ModelSerializer):
-    class Meta():
-        model = Book
-        fields ='__all__'
-
