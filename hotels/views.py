@@ -4,12 +4,14 @@ from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Rooms, Book, Spots
-from hotels.serializers import RoomsSerializer, BookSerializer, DetailSerializer, SpotSerializer
-# Create your views here.
+from hotels.serializers import RoomsSerializer, BookSerializer, DetailSerializer ,\
+                                SpotSerializer, BookUserListSerializer
 from datetime import date
 
 
 class RoomView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request):
         rooms = Rooms.objects.all()
         serializer = RoomsSerializer(rooms, many=True)
@@ -53,11 +55,10 @@ class DetailRoomViewAPI(APIView):
 
 
 class BookUsersViewAPI(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
+    # permission_classes = [permissions.IsAuthenticated]
     def get(self, request, room_id):
-        booked_all_rooms = get_object_or_404(Book, id=room_id)
-        serializer = DetailSerializer(booked_all_rooms, many=True)
+        booked_all_rooms = get_object_or_404(Rooms, id=room_id)
+        serializer = BookUserListSerializer(booked_all_rooms)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
@@ -75,7 +76,11 @@ class SpotViewAPI(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, spot_id=None):
-        serializer = SpotSerializer(data=request.data)
+        # 안되면 카피 사용!
+        # request.data['call_number'] = request.data['call_number'].replace('-', '').strip()
+        data = request.data.copy()
+        data['call_number'] = request.data['call_number'].replace('-', '').strip()
+        serializer = SpotSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -84,7 +89,9 @@ class SpotViewAPI(APIView):
 
     def patch(self, request, spot_id=None):
         spot = self.get_object(request, spot_id)
-        serializer = SpotSerializer(spot, data=request.data, partial=True)
+        data = request.data.copy()
+        data['call_number'] = request.data['call_number'].replace('-', '').strip()
+        serializer = SpotSerializer(spot, data=data, partial=True)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -98,6 +105,8 @@ class SpotViewAPI(APIView):
 
 
 class BookManage(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request, pk):
         all_books = get_object_or_404(Book, id=pk)
         serializer = BookSerializer(all_books)
@@ -123,8 +132,7 @@ class BookManage(APIView):
                     pass
                 elif i.check_out > my_check_in:
                     return Response(f"예약 할 수 없음 나의 예약 {my_check_in}~{my_check_out}, 이미 예약된 날짜 {i.check_in}~{i.check_out}")
-            
-        serializer = BookSerializer(data=request.data)
+
         if serializer.is_valid():
             serializer.save(user=request.user, room=room)
             return Response(serializer.data, status=status.HTTP_201_CREATED)

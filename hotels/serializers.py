@@ -4,6 +4,8 @@ from rest_framework import serializers
 from .models import Rooms, Book, Spots
 from rest_framework.generics import get_object_or_404
 from datetime import datetime, date
+from users.serializers import UserSerializer
+
 
 def check_existing_room(**kwargs):
     existing_room = Rooms.objects.filter(
@@ -34,6 +36,14 @@ class RoomsSerializer(serializers.ModelSerializer):
 
 
 class DetailSerializer(serializers.ModelSerializer):
+    book_set = serializers.SerializerMethodField()
+
+    def get_book_set(self, obj):
+        books = Book.objects.filter(room_id=obj.id)
+        # print(books)
+        book_list = BookSerializer(books, many=True)
+        return book_list.data
+
     class Meta:
         model = Rooms
         fields = '__all__'
@@ -88,10 +98,33 @@ class BookSerializer(serializers.ModelSerializer):
         return attrs
         
 
-
 class BookViewSerializer(serializers.ModelSerializer):
     class Meta():
         model = Book
         fields ='__all__'
 
 
+class BookInfoSerializer(serializers.ModelSerializer):
+    user_set = serializers.SerializerMethodField()
+
+    def get_user_set(self, obj):
+        user = obj.user
+        user_list = UserSerializer(user)
+        return user_list.data
+
+    class Meta():
+        model = Book
+        fields = '__all__'
+
+
+class BookUserListSerializer(serializers.ModelSerializer):
+    book_set = serializers.SerializerMethodField()
+
+    def get_book_set(self, obj):
+        books = Book.objects.filter(room_id=obj.id)
+        book_list = BookInfoSerializer(books, many=True)
+        return book_list.data
+
+    class Meta:
+        model = Rooms
+        fields = ['name', 'book_set', 'status']
