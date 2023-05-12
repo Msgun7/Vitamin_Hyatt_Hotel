@@ -4,17 +4,19 @@ from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Rooms, Book, Spots
+from hotels.serializers import RoomsSerializer, BookSerializer, DetailSerializer ,\
+                                SpotSerializer, BookUserListSerializer
+# Create your views here.
+from datetime import date
 
 
 class RoomView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request):
         rooms = Rooms.objects.all()
         serializer = RoomsSerializer(rooms, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-
-class RoomViewAPI(APIView):
 
     def post(self, request):
         serializer = RoomsSerializer(data=request.data)
@@ -47,7 +49,6 @@ class DetailRoomViewAPI(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
     def delete(self, request, room_id):
         room = self.get_object(request, room_id)
         room.delete()
@@ -55,17 +56,17 @@ class DetailRoomViewAPI(APIView):
 
 
 class BookUsersViewAPI(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
+    # permission_classes = [permissions.IsAuthenticated]
     def get(self, request, room_id):
-        booked_all_rooms = get_object_or_404(Book, id=room_id)
-        serializer = DetailSerializer(booked_all_rooms, many=True)
+        booked_all_rooms = get_object_or_404(Rooms, id=room_id)
+        serializer = BookUserListSerializer(booked_all_rooms)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 # 지점 생성 및 조회
 class SpotViewAPI(APIView):
     permission_classes = [permissions.IsAuthenticated]
+
     def get_object(self, request, spot_id):
         spot = get_object_or_404(Spots, id=spot_id)
         return spot
@@ -76,16 +77,22 @@ class SpotViewAPI(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, spot_id=None):
-        serializer = SpotSerializer(data=request.data)
+        # 안되면 카피 사용!
+        # request.data['call_number'] = request.data['call_number'].replace('-', '').strip()
+        data = request.data.copy()
+        data['call_number'] = request.data['call_number'].replace('-', '').strip()
+        serializer = SpotSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request, spot_id=None):
         spot = self.get_object(request, spot_id)
-        serializer = SpotSerializer(spot, data=request.data, partial=True)
+        data = request.data.copy()
+        data['call_number'] = request.data['call_number'].replace('-', '').strip()
+        serializer = SpotSerializer(spot, data=data, partial=True)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -99,29 +106,43 @@ class SpotViewAPI(APIView):
 
 
 class BookManage(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request):
-        pass
+    def get(self, request, pk):
+        all_books = get_object_or_404(Book, id=pk)
+        serializer = BookSerializer(all_books)
+        return Response(serializer.data)
 
-    def post(self, request):
-        # 예약하기
-        if request.check_in in Book:
-            return Response('이미 예약이 잡힌 날짜')
-        else :
-            serializer = BookSerializer(data = request.data)
-            serializer.save()
+    def post(self, request, pk):
+        room = get_object_or_404(Rooms, id=pk)
+        serializer = BookSerializer(data = request.data)
 
-        return Response('예약을 위한 post 요청')
-        # 같은 check_in 이 있으면 예약이 불가합니다.
-        # check_in은 날짜 테이블 DateField 입니다.
-        # 예를 들어 10일을 예약한다 하면 예약 오브젝트가 10개가 생김...
-        # 개선의 여지 ? 
+        # 입실이 퇴실 보다 늦을 경우 FAil
+        test = Book.objects.filter(room=pk)
+        for i in test:
+            # db에 퇴실 날짜보다 예약하려는 입실 날짜가 작으면 안됨.?
+            if date(request.data['check_in']) > i.check_in:
+                if date(request.data['check_in']) < i.check_out:
+                    print('no')
+            elif date(request.data['check_in']) > i.check_in:
+                print('no')
 
-    def delete(self, request, user_id):
-        book = get_object_or_404(Book, id=user_id)
+        if serializer.is_valid():
+            if not room.bookset.filter(room=pk, check_in=request.data["check_in"]).exists():
+                serializer.save(user=request.user, room=room)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response('예약할 수 없음')
+        else:
+            return Response(serializer.errors)
+
+    def delete(self, request, pk):
+        book = get_object_or_404(Book, id=pk)
         if request.user == book.user:
             book.delete()
             return Response("예약 취소됨", status=status.HTTP_204_NO_CONTENT)
         else:
             return Response("권한이 없음")
+
+
 
