@@ -121,4 +121,3 @@ class SpotViewTest(APITestCase):
             response = self.client.delete(path=url, HTTP_AUTHORIZATION=f"Bearer {self.access_token}")
             self.assertEquals(response.status_code, 204)
 
-

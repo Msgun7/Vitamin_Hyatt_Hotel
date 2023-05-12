@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from users.models import User
-from .validators import check_phone, check_password
+from rest_framework import status
+
 
 class UserSerializer(serializers.ModelSerializer):
     
@@ -34,11 +35,6 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         # }
     
     def update(self,instance, validated_data):
-        if validated_data.get('password'):
-            check_password(validated_data['password'])
-        
-        if validated_data.get('phone'):
-            check_phone(validated_data['phone'])
             
         user = super().update(instance,validated_data)
         password = user.password
