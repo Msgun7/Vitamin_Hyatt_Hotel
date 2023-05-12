@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'users',
     'hotels',
     'reviews',
+    "corsheaders"
 ]
 
 REST_FRAMEWORK = {
@@ -54,6 +55,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ORIGIN_WHITELIST = ['http://127.0.0.1:8000'
+                         ,'http://localhost:8000']
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'Vitamin_Hyatt.urls'
 

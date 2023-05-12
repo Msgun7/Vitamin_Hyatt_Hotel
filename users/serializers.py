@@ -1,8 +1,8 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from users.models import User
-from .validators import check_phone, check_password
-from hotels.models import Book
+from .validators import check_password
+from hotels.validators import validate_phone_number
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -38,16 +38,16 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             check_password(validated_data['password'])
 
         if validated_data.get('phone'):
-            check_phone(validated_data['phone'])
-
-        user = super().update(instance, validated_data)
+            validate_phone_number(validated_data['phone'])
+            
+        user = super().update(instance,validated_data)
         password = user.password
         user.set_password(password)
         user.save()
         return user
 
 
-class LoginSerializer(TokenObtainPairSerializer):
+class LoginSerializer(TokenObtainPairSerializer): 
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
@@ -57,7 +57,6 @@ class LoginSerializer(TokenObtainPairSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
         fields = ('username', 'email', 'phone', 'point',)
