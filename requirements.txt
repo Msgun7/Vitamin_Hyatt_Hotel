@@ -8,10 +8,6 @@ django-phonenumber-field==7.1.0
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.2.2
 Faker==18.7.0
-<<<<<<< HEAD
-=======
-phonenumbers==8.13.11
->>>>>>> 427f681 (5월 12일 저녁 머지)
 Pillow==9.5.0
 pycodestyle==2.10.0
 PyJWT==2.6.0
@@ -20,8 +16,5 @@ pytz==2023.3
 six==1.16.0
 sqlparse==0.4.4
 tomli==2.0.1
-<<<<<<< HEAD
 tzdata==2023.3
 
-=======
->>>>>>> 427f681 (5월 12일 저녁 머지)
