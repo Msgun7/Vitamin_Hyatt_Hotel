@@ -8,8 +8,6 @@ django-phonenumber-field==7.1.0
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.2.2
 Faker==18.7.0
-phonenumbers==8.13.11
-phonenumberslite==8.13.11
 Pillow==9.5.0
 pycodestyle==2.10.0
 PyJWT==2.6.0
