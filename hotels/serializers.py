@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework.serializers import ValidationError
 from rest_framework import serializers
 from .models import Rooms, Book, Spots
+from users.serializers import UserSerializer
 
 
 def check_existing_room(**kwargs):
@@ -33,6 +34,14 @@ class RoomsSerializer(serializers.ModelSerializer):
 
 
 class DetailSerializer(serializers.ModelSerializer):
+    book_set = serializers.SerializerMethodField()
+
+    def get_book_set(self, obj):
+        books = Book.objects.filter(room_id=obj.id)
+        # print(books)
+        book_list = BookSerializer(books, many=True)
+        return book_list.data
+
     class Meta:
         model = Rooms
         fields = '__all__'
@@ -78,3 +87,36 @@ class BookSerializer(serializers.ModelSerializer):
                         "room": {"required": False}}
         model = Book
         fields = '__all__'
+
+
+class BookViewSerializer(serializers.ModelSerializer):
+    class Meta():
+        model = Book
+        fields ='__all__'
+
+
+class BookInfoSerializer(serializers.ModelSerializer):
+    user_set = serializers.SerializerMethodField()
+
+    def get_user_set(self, obj):
+        user = obj.user
+        user_list = UserSerializer(user)
+        return user_list.data
+
+    class Meta():
+        model = Book
+        fields = '__all__'
+
+
+class BookUserListSerializer(serializers.ModelSerializer):
+    book_set = serializers.SerializerMethodField()
+
+    def get_book_set(self, obj):
+        books = Book.objects.filter(room_id=obj.id)
+        book_list = BookInfoSerializer(books, many=True)
+        return book_list.data
+
+    class Meta:
+        model = Rooms
+        fields = ['name', 'book_set', 'status']
+

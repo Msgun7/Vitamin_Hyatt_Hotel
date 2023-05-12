@@ -7,9 +7,8 @@ from .validators import contains_special_character, validate_phone_number
 
 class Spots(models.Model):
     name = models.CharField(max_length=100, unique=True, validators=[
-                            contains_special_character])
-    call_number = models.CharField(
-        max_length=100, validators=[validate_phone_number])
+        contains_special_character])
+    call_number = models.CharField(validators=[validate_phone_number], max_length=20, unique=True)
 
     location = models.CharField(max_length=200)
 
@@ -28,9 +27,9 @@ class Rooms(models.Model):
     ]
     spot = models.ForeignKey(Spots, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, validators=[
-                            contains_special_character])
+        contains_special_character])
     description = models.TextField(max_length=300, validators=[
-                                   MinLengthValidator(10)], error_messages="10자 이상 입력하셔야합니다.")
+        MinLengthValidator(10)], error_messages="10자 이상 입력하셔야합니다.")
     image = models.ImageField(null=True, blank=True)
     price = models.IntegerField(validators=[MinValueValidator(0)], null=False)
     max_members = models.IntegerField()
@@ -54,3 +53,4 @@ class Book(models.Model):
 
     def __str__(self):
         return self.room.name
+
