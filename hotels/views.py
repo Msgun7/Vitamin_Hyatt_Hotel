@@ -4,7 +4,7 @@ from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Rooms, Book, Spots
-from hotels.serializers import RoomsSerializer, BookSerializer, DetailSerializer , SpotSerializer
+from hotels.serializers import RoomsSerializer, BookSerializer, DetailSerializer, SpotSerializer
 # Create your views here.
 from datetime import date
 
@@ -46,7 +46,6 @@ class DetailRoomViewAPI(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
     def delete(self, request, room_id):
         room = self.get_object(request, room_id)
         room.delete()
@@ -65,6 +64,7 @@ class BookUsersViewAPI(APIView):
 # 지점 생성 및 조회
 class SpotViewAPI(APIView):
     permission_classes = [permissions.IsAuthenticated]
+
     def get_object(self, request, spot_id):
         spot = get_object_or_404(Spots, id=spot_id)
         return spot
@@ -123,15 +123,14 @@ class BookManage(APIView):
                     pass
                 elif i.check_out > my_check_in:
                     return Response(f"예약 할 수 없음 나의 예약 {my_check_in}~{my_check_out}, 이미 예약된 날짜 {i.check_in}~{i.check_out}")
-
             
+        serializer = BookSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=request.user, room=room)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors)
-   
-   
+
     def delete(self, request, pk):
         book = get_object_or_404(Book, id=pk)
         if request.user == book.user:
@@ -139,6 +138,3 @@ class BookManage(APIView):
             return Response("예약 취소됨", status=status.HTTP_204_NO_CONTENT)
         else:
             return Response("권한이 없음")
-
-
-
