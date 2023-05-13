@@ -81,6 +81,11 @@ class MyBookReviewCreate(APIView):
     permission_classes = [permissions.IsAuthenticated]
     # hotels.view에서 같은 get메서드가 있어서 마이페이지로 redirect시킴
 
+    def get(self, request, booked_id):
+        mybook = get_object_or_404(Book, user=request.user, id=booked_id)
+        serializer = myBookSerializer(mybook)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     def post(self, request, booked_id):
         print("진입하였습니다")
         book = get_object_or_404(Book, id=booked_id)  # booked_id에 해당하는 예약

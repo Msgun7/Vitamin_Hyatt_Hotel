@@ -114,10 +114,7 @@ class BookManage(APIView):
     def get(self, request, pk):
         all_books = get_object_or_404(Book, id=pk)
         serializer = BookSerializer(all_books)
-        redirect_url = reverse('mypagelist', args=[str(all_books.pk)])
-        return redirect(redirect_url)
-        # 마이페이지 에약 상세로 전달
-        # 같은 get메서드가 있어서 마이페이지로 redirect시킴
+        return Response(serializer.data)
 
     def post(self, request, pk):
         room = get_object_or_404(Rooms, id=pk)
