@@ -18,6 +18,7 @@ class RoomView(APIView):
     # permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
+        print(request.user.id)
         admin = get_object_or_404(AdminUser, admin_user=request.user)
         rooms = Rooms.objects.filter(spot=admin.spot)
         serializer = RoomsSerializer(rooms, many=True)
@@ -139,7 +140,6 @@ class BookManage(APIView):
             checkout_y_m_d[0], checkout_y_m_d[1], checkout_y_m_d[2])
 
         for i in all_checkins:
-
             if my_check_in < i.check_in:  #체크인 날짜가 적절할 경우
                 pass
                 if my_check_out <= i.check_in:  # 체크 아웃 날짜가 적절한 경우
