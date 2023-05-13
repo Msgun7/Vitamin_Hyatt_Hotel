@@ -31,14 +31,12 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('password', 'phone',)
-
-    def update(self, instance, validated_data):
-        if validated_data.get('password'):
-            check_password(validated_data['password'])
-
-        if validated_data.get('phone'):
-            validate_phone_number(validated_data['phone'])
+        fields = ('password','phone',) 
+        # extra_kwargs = {
+        #     'password': {'write_only': True},
+        # }
+    
+    def update(self,instance, validated_data):
             
         user = super().update(instance,validated_data)
         password = user.password
@@ -53,6 +51,8 @@ class LoginSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
         token['email'] = user.email
         token['username'] = user.username
+        token['is_admin'] = user.is_admin
+        
         return token
 
 
