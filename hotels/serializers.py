@@ -55,7 +55,6 @@ class DetailSerializer(serializers.ModelSerializer):
         room.save()
         return room
 
-
 class SpotSerializer(serializers.ModelSerializer):
     all_room = serializers.SerializerMethodField()
 

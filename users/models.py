@@ -69,6 +69,7 @@ class AdminUser(models.Model):
         ('5', '포항점'),
     ]
     admin_user = models.OneToOneField(User, on_delete=models.CASCADE)
+    
     is_staff = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=True)
     # 지점 넣어도 될까요? 넣어서 방 수정하거나 생성할 때 자기 지점꺼만 할 수 있다던가 그런,,,
