@@ -65,7 +65,6 @@ class BookUsersViewAPI(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, room_id):
-
         admin = get_object_or_404(AdminUser, admin_user=request.user)
         booked_all_rooms = get_object_or_404(Rooms, id=room_id, spot=admin.spot)
         serializer = BookUserListSerializer(booked_all_rooms)
