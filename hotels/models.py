@@ -48,7 +48,7 @@ class Book(models.Model):
         Rooms, on_delete=models.CASCADE, related_name='bookset')
     created_at = models.DateTimeField(auto_now_add=True)
     members = models.IntegerField(default=1)
-    check_in = models.DateField()
+    check_in = models.DateField() 
     check_out = models.DateField()
 
     def __str__(self):
