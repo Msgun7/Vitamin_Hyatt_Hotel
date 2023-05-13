@@ -3,24 +3,13 @@ from .models import Review
 from hotels.models import Rooms, Book
 
 
-class AllReviewSerializer(serializers.ModelSerializer):
-    user = serializers.SerializerMethodField()
-
-    def get_user(self, obj):
-        return obj.user.username
-
-    class Meta:
-        model = Review
-        fields = '__all__'
-
-
 class RoomSerializer(serializers.ModelSerializer):
-    review_set = AllReviewSerializer(many=True, read_only=True)
+    review_set = serializers.StringRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Rooms
-        fields = ['id', 'review_set', 'name', 'max_members',
-                  'description', 'price']
+        fields = ['id', 'review_set', 'name',
+                  'max_members', 'description', 'price']
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -28,7 +17,6 @@ class ReviewSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     booked = serializers.SerializerMethodField()
     room = serializers.SerializerMethodField()
-    spot = serializers.SerializerMethodField()
 
     def get_user(self, obj):
         return obj.user.email
@@ -39,17 +27,12 @@ class ReviewSerializer(serializers.ModelSerializer):
     def get_room(self, obj):
         return obj.room.name
 
-    def get_spot(self, obj):
-        return obj.room.spot.name
-
     class Meta:
         model = Review
-        fields = ['id', 'user', 'booked', 'room',
-                  'title', 'context', 'stars', 'spot']
+        fields = ['id', 'user', 'booked', 'room', 'title', 'context', 'stars']
         extra_kwargs = {
             'user': {'read_only': True},
             'booked': {'read_only': True},
-            'spot': {'read_only': True}
         }
 
 
@@ -78,7 +61,6 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
 class myBookSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     room = serializers.SerializerMethodField()
-    spot = serializers.SerializerMethodField()
 
     def get_user(self, obj):
         return obj.user.email
@@ -86,9 +68,6 @@ class myBookSerializer(serializers.ModelSerializer):
     def get_room(self, obj):
         return obj.room.name
 
-    def get_spot(self, obj):
-        return obj.room.spot.name
-
     class Meta():
         model = Book
-        fields = ['user', 'room', 'members', 'check_in', 'check_out', 'spot']
+        fields = ['user', 'room', 'members']
