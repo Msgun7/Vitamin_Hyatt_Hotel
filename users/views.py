@@ -32,9 +32,8 @@ class LoginView(TokenObtainPairView):
 
 
 class UserProfileView(APIView):
-    def get(self, request):
-        print(request.user)
-        user_profile = get_object_or_404(User, id=request.user.id)
+    def get(self, request, user_id):
+        user_profile = get_object_or_404(User, id=user_id)
         serializer = UserProfileSerializer(user_profile)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -66,7 +65,7 @@ class UserProfileView(APIView):
 class MyPage(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request):
+    def get(self, request, user_id):
         review = Review.objects.filter(user=request.user.id)
         book = Book.objects.filter(user=request.user.id)
         serializer = ReviewSerializer(review, many=True)

@@ -11,7 +11,7 @@ from users.models import AdminUser
 
 
 class RoomView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
     def get(self, request):
         admin = get_object_or_404(AdminUser, admin_user=request.user)
         rooms = Rooms.objects.filter(spot=admin.spot)
@@ -29,7 +29,7 @@ class RoomView(APIView):
 
 # 방 정보 수정 및 삭제
 class DetailRoomViewAPI(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
     def get_object(self, request, room_id):
         room = get_object_or_404(Rooms, id=room_id)
         return room
@@ -55,18 +55,24 @@ class DetailRoomViewAPI(APIView):
 
 
 class BookUsersViewAPI(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
     def get(self, request, room_id):
-        print(request.user)
         admin = get_object_or_404(AdminUser, admin_user=request.user)
         booked_all_rooms = get_object_or_404(Rooms, id=room_id, spot=admin.spot)
         serializer = BookUserListSerializer(booked_all_rooms)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class BookUserCal(APIView):
+    def get(self, request, room_id):
+        booked_all_rooms = get_object_or_404(Rooms, id=room_id)
+        serializer = BookUserListSerializer(booked_all_rooms)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 # 지점 생성 및 조회
 class SpotViewAPI(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self, request, spot_id):
         spot = get_object_or_404(Spots, id=spot_id)
