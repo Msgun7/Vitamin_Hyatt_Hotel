@@ -1,9 +1,6 @@
-from rest_framework import serializers
 from rest_framework.serializers import ValidationError
 from rest_framework import serializers
 from .models import Rooms, Book, Spots
-from rest_framework.generics import get_object_or_404
-from datetime import datetime, date
 from users.serializers import UserSerializer
 
 

@@ -5,6 +5,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('rooms/book/<int:pk>/',views.BookManage.as_view(), name='book'),
+    path('roomsbyspot/<int:spot_id>/', views.RoomViewBySpot.as_view(), name='Rooms_by_spot'), # 지점별 방 조회
     path('rooms/', views.RoomView.as_view(), name='rooms_view'),
     path('rooms/spot/', views.SpotViewAPI.as_view(), name='spot_view'),
     path('rooms/spot/<int:spot_id>/', views.SpotViewAPI.as_view(), name='spot_detail_view'),
