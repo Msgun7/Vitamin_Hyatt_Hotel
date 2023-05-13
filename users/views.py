@@ -32,7 +32,6 @@ class LoginView(TokenObtainPairView):
   
 class MyPage(APIView):
     permission_classes = [permissions.IsAuthenticated]
-
     def get(self, request, user_id):
         user_profile = get_object_or_404(User, id=user_id)
         review = Review.objects.filter(user=user_id)
