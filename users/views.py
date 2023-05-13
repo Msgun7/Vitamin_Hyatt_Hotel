@@ -14,9 +14,8 @@ from rest_framework_simplejwt.views import (
 from users.serializers import UserSerializer, LoginSerializer, UserProfileSerializer, UserUpdateSerializer
 
 
-
 class SignupView(APIView):
-     def post(self, request):
+    def post(self, request):
         data = request.data.copy()
         data['phone'] = request.data['phone'].replace('-', '').strip()
         serializer = UserSerializer(data=data)
@@ -24,7 +23,7 @@ class SignupView(APIView):
             serializer.save()
             return Response({'message': ' 가입완료!'}, status=status.HTTP_201_CREATED)
         else:
-            return Response({'message':f'${serializer.errors}'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': f'${serializer.errors}'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginView(TokenObtainPairView):
@@ -50,7 +49,8 @@ class MyPage(APIView):
         user_profile = get_object_or_404(User, id=user_id)
         data = request.data.copy()
         data['phone'] = request.data['phone'].replace('-', '').strip()
-        serializer = UserUpdateSerializer(user_profile,data=data, partial=True)
+        serializer = UserUpdateSerializer(
+            user_profile, data=data, partial=True)
 
         if request.user == user_profile:
             if serializer.is_valid():
@@ -69,13 +69,16 @@ class MyPage(APIView):
         else:
             return Response("권한이 없습니다!", status=status.HTTP_403_FORBIDDEN)
 
+          
 class MyReviewCreate(APIView):
     permission_classes = [permissions.IsAuthenticated]
+    # hotels.view에서 같은 get메서드가 있어서 마이페이지로 redirect시킴
 
     def post(self, request, booked_id):
+        print("진입하였습니다")
         book = get_object_or_404(Book, id=booked_id)  # booked_id에 해당하는 예약
-        print(book)
-        if book.user_id == request.user.id:  # user_id에 해당하는 예약자만 리뷰달 수 있게
+        print(book.user_id, book.user.id, request.user.id)
+        if book.user_id == request.user.id:  # booked_id에 해당하는 예약자만 리뷰달 수 있게
             serializer = ReviewCreateSerializer(data=request.data)
             if serializer.is_valid(raise_exception=True):
                 serializer.save(room=book.room, user=request.user, booked=book)
