@@ -1,9 +1,6 @@
-from rest_framework import serializers
 from rest_framework.serializers import ValidationError
 from rest_framework import serializers
 from .models import Rooms, Book, Spots
-from rest_framework.generics import get_object_or_404
-from datetime import datetime, date
 from users.serializers import UserSerializer
 
 
@@ -40,7 +37,6 @@ class DetailSerializer(serializers.ModelSerializer):
 
     def get_book_set(self, obj):
         books = Book.objects.filter(room_id=obj.id)
-        # print(books)
         book_list = BookSerializer(books, many=True)
         return book_list.data
 
