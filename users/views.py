@@ -27,15 +27,24 @@ class SignupView(APIView):
 
 
 class LoginView(TokenObtainPairView):
-    serializer_class = LoginSerializer
-
-
-class UserProfileView(APIView):
+    serializer_class=LoginSerializer
+  
+class MyPage(APIView):
+    permission_classes = [permissions.IsAuthenticated]
     def get(self, request, user_id):
         user_profile = get_object_or_404(User, id=user_id)
-        serializer = UserProfileSerializer(user_profile)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
+        review = Review.objects.filter(user=user_id)
+        book = Book.objects.filter(user=user_id)
+        serializer = ReviewSerializer(review, many=True)
+        bookserializer = myBookSerializer(book, many=True)
+        profileserializer = UserProfileSerializer(user_profile)
+        data = {
+            'reviews': serializer.data,
+            'books': bookserializer.data,
+            'profile': profileserializer.data,
+        }
+        return Response(data, status=status.HTTP_200_OK)
+    
     def put(self, request, user_id):
         user_profile = get_object_or_404(User, id=user_id)
         data = request.data.copy()
@@ -60,24 +69,8 @@ class UserProfileView(APIView):
         else:
             return Response("권한이 없습니다!", status=status.HTTP_403_FORBIDDEN)
 
-
-# 마이페이지 내 리뷰 조회, 내 예약 조회
-class MyPage(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get(self, request, pk):  # pk = user_id
-        review = Review.objects.filter(user=pk)
-        book = Book.objects.filter(user=pk)
-        serializer = ReviewSerializer(review, many=True)
-        bookserializer = myBookSerializer(book, many=True)
-        data = {
-            'reviews': serializer.data,
-            'books': bookserializer.data,
-        }
-        return Response(data, status=status.HTTP_200_OK)
-
-
-class MyBookReviewCreate(APIView):
+          
+class MyReviewCreate(APIView):
     permission_classes = [permissions.IsAuthenticated]
     # hotels.view에서 같은 get메서드가 있어서 마이페이지로 redirect시킴
 
@@ -97,7 +90,6 @@ class MyBookReviewCreate(APIView):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response("권한이 없습니다.", status=status.HTTP_401_UNAUTHORIZED)
-
 
 class ReviewDetail(APIView):
     # 리뷰 상세 조회
