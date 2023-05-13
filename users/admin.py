@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
-from users.models import User,AdminUser
+from users.models import User, AdminUser
 
 
 class UserCreationForm(forms.ModelForm):
@@ -31,12 +31,14 @@ class UserCreationForm(forms.ModelForm):
             user.save()
         return user
 
+
 class UserChangeForm(forms.ModelForm):
     password = ReadOnlyPasswordHashField()
 
     class Meta:
         model = User
         fields = ["email", "password", "is_active", "is_admin"]
+
 
 class UserAdmin(BaseUserAdmin):
     form = UserChangeForm
@@ -45,10 +47,10 @@ class UserAdmin(BaseUserAdmin):
     list_display = ["email", "is_admin"]
     list_filter = ["is_admin"]
     fieldsets = [
-        (None, {"fields": ["email", "password"]}),
+        (None, {"fields": ["email", "password", "phone", "is_active"]}),
         ("Permissions", {"fields": ["is_admin"]}),
     ]
-    
+
     add_fieldsets = [
         (
             None,
@@ -61,6 +63,7 @@ class UserAdmin(BaseUserAdmin):
     search_fields = ["email"]
     ordering = ["email"]
     filter_horizontal = []
+
 
 admin.site.register(User, UserAdmin)
 admin.site.register(AdminUser)

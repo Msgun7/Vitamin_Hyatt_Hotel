@@ -2,18 +2,22 @@ from rest_framework import serializers
 from rest_framework.serializers import ValidationError
 from rest_framework import serializers
 from .models import Rooms, Book, Spots
+from rest_framework.generics import get_object_or_404
+from datetime import datetime, date
+from users.serializers import UserSerializer
+
 
 def check_existing_room(**kwargs):
-        existing_room = Rooms.objects.filter(
-            spot=kwargs['spot'],
-            name=kwargs['name'],
+    existing_room = Rooms.objects.filter(
+        spot=kwargs['spot'],
+        name=kwargs['name'],
 
-        ).exists()
-        if existing_room:
-            return True
+    ).exists()
+    if existing_room:
+        return True
 
+      
 class RoomsSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Rooms
         fields = '__all__'
@@ -31,8 +35,15 @@ class RoomsSerializer(serializers.ModelSerializer):
         return attrs
 
 
-
 class DetailSerializer(serializers.ModelSerializer):
+    book_set = serializers.SerializerMethodField()
+
+    def get_book_set(self, obj):
+        books = Book.objects.filter(room_id=obj.id)
+        # print(books)
+        book_list = BookSerializer(books, many=True)
+        return book_list.data
+
     class Meta:
         model = Rooms
         fields = '__all__'
@@ -40,7 +51,7 @@ class DetailSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if attrs.get('max_members'):
             if attrs['max_members'] < 0 or attrs['max_members'] > 10:
-              raise ValidationError('인원은 1인 이상부터 가능 합니다! 최대 인원은 10명까지입니다.')
+                raise ValidationError('인원은 1인 이상부터 가능 합니다! 최대 인원은 10명까지입니다.')
         return attrs
 
     def update(self, instance, validated_data):
@@ -66,7 +77,6 @@ class SpotSerializer(serializers.ModelSerializer):
         return spot
 
 
-
 class BookSerializer(serializers.ModelSerializer):
 
     def get_user(self, obj):
@@ -74,13 +84,46 @@ class BookSerializer(serializers.ModelSerializer):
         return obj.user.email
 
     class Meta():
-        extra_kwargs = {"user": {"required":False}, "room": {"required":False}}
+        extra_kwargs = {"user": {"required": False},
+                        "room": {"required": False}}
         model = Book
         fields = '__all__'
 
+    def validate(self, attrs):
+        if attrs["check_in"] > attrs["check_out"]:
+            raise ValidationError('체크인 날짜는 체크아웃 날짜보다 작아야 합니다.')
+        if attrs["check_in"] == attrs["check_out"]:
+            raise ValidationError('체크인 날짜는 체크아웃 날짜와 같으면 안됩니다..')
+        return attrs
+        
 
 class BookViewSerializer(serializers.ModelSerializer):
     class Meta():
         model = Book
         fields ='__all__'
 
+
+class BookInfoSerializer(serializers.ModelSerializer):
+    user_set = serializers.SerializerMethodField()
+
+    def get_user_set(self, obj):
+        user = obj.user
+        user_list = UserSerializer(user)
+        return user_list.data
+
+    class Meta():
+        model = Book
+        fields = '__all__'
+
+
+class BookUserListSerializer(serializers.ModelSerializer):
+    book_set = serializers.SerializerMethodField()
+
+    def get_book_set(self, obj):
+        books = Book.objects.filter(room_id=obj.id)
+        book_list = BookInfoSerializer(books, many=True)
+        return book_list.data
+
+    class Meta:
+        model = Rooms
+        fields = ['name', 'book_set', 'status']
