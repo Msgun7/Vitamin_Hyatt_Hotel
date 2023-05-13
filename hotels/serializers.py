@@ -37,7 +37,6 @@ class DetailSerializer(serializers.ModelSerializer):
 
     def get_book_set(self, obj):
         books = Book.objects.filter(room_id=obj.id)
-        # print(books)
         book_list = BookSerializer(books, many=True)
         return book_list.data
 
@@ -55,7 +54,6 @@ class DetailSerializer(serializers.ModelSerializer):
         room = super().update(instance, validated_data)
         room.save()
         return room
-
 
 class SpotSerializer(serializers.ModelSerializer):
     all_room = serializers.SerializerMethodField()

@@ -11,6 +11,7 @@ urlpatterns = [
     path('rooms/spot/<int:spot_id>/', views.SpotViewAPI.as_view(), name='spot_detail_view'),
     path('rooms/<int:room_id>/', views.DetailRoomViewAPI.as_view(), name='detail_room_view'),
     path('customers/<int:room_id>/', views.BookUsersViewAPI.as_view()),
+    path('cal/<int:room_id>/', views.BookUserCal.as_view())
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
