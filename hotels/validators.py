@@ -1,6 +1,4 @@
 import re
-import phonenumbers
-# phonenumber pip install phonenumbers 필요 전화번호 유효성 검사에 있어 해외번호 또한 사용가능하게 하기 위해서 설치
 from rest_framework.serializers import ValidationError
 
 
@@ -10,7 +8,6 @@ def contains_special_character(name):
     if not name_regex.findall(name):
         raise ValidationError('이름에 특수문자를 사용할 수 없습니다!')
     return name
-
 
 
 # 전화번호의 유효성 Django의 모듈 phonenumbers를 받아와 전화번호의 형식을 판단합니다.
@@ -28,6 +25,3 @@ def validate_phone_number(phone_number):
     #         raise ValidationError('사용할 수 없는 전화번호입니다. - 과 함께 입력해주세요.')
     # except phonenumbers.phonenumberutil.NumberParseException:
     #     raise ValidationError('사용할 수 없는 전화번호입니다.')
-
-
-
