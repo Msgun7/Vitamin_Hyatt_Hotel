@@ -18,6 +18,7 @@ class RoomView(APIView):
     # permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
+        print(request.user.id)
         admin = get_object_or_404(AdminUser, admin_user=request.user)
         rooms = Rooms.objects.filter(spot=admin.spot)
         serializer = RoomsSerializer(rooms, many=True)

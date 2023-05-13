@@ -28,7 +28,8 @@ class SignupView(APIView):
 
 class LoginView(TokenObtainPairView):
     serializer_class=LoginSerializer
-  
+
+
 class MyPage(APIView):
     permission_classes = [permissions.IsAuthenticated]
     def get(self, request, user_id):
@@ -85,6 +86,7 @@ class MyReviewCreate(APIView):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response("권한이 없습니다.", status=status.HTTP_401_UNAUTHORIZED)
+
 
 class ReviewDetail(APIView):
     # 리뷰 상세 조회
