@@ -27,11 +27,12 @@ class SignupView(APIView):
 
 
 class LoginView(TokenObtainPairView):
-    serializer_class=LoginSerializer
+    serializer_class = LoginSerializer
 
 
 class MyPage(APIView):
     permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request, user_id):
         try:
             admin = get_object_or_404(AdminUser, admin_user=request.user)
@@ -77,8 +78,8 @@ class MyPage(APIView):
         else:
             return Response("권한이 없습니다!", status=status.HTTP_403_FORBIDDEN)
 
-          
-class MyReviewCreate(APIView):
+
+class MyBookReviewCreate(APIView):
     permission_classes = [permissions.IsAuthenticated]
     # hotels.view에서 같은 get메서드가 있어서 마이페이지로 redirect시킴
 

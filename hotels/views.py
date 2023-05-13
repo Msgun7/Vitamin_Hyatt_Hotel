@@ -36,6 +36,7 @@ class RoomView(APIView):
 # 방 정보 수정 및 삭제
 class DetailRoomViewAPI(APIView):
     # permission_classes = [permissions.IsAuthenticated]
+
     def get_object(self, request, room_id):
         room = get_object_or_404(Rooms, id=room_id)
         return room
@@ -65,6 +66,7 @@ class BookUsersViewAPI(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, room_id):
+
         admin = get_object_or_404(AdminUser, admin_user=request.user)
         booked_all_rooms = get_object_or_404(Rooms, id=room_id, spot=admin.spot)
         serializer = BookUserListSerializer(booked_all_rooms)
@@ -138,7 +140,6 @@ class BookManage(APIView):
             checkout_y_m_d[0], checkout_y_m_d[1], checkout_y_m_d[2])
 
         for i in all_checkins:
-            print(f'{bool((my_check_in)>=(i.check_in))}')
             if my_check_in < i.check_in:  #체크인 날짜가 적절할 경우
                 pass
                 if my_check_out <= i.check_in:  # 체크 아웃 날짜가 적절한 경우
