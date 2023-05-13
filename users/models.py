@@ -60,12 +60,20 @@ class User(AbstractBaseUser):
         return self.is_admin
 
 
-class AdminUser(models.Model): 
+class AdminUser(models.Model):
+    all_spot = [
+        ('1', '고양점'),
+        ('2', '대구점'),
+        ('3', '세종점'),
+        ('4', '양주점'),
+        ('5', '포항점'),
+    ]
     admin_user = models.OneToOneField(User, on_delete=models.CASCADE)
     
     is_staff = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=True)
     # 지점 넣어도 될까요? 넣어서 방 수정하거나 생성할 때 자기 지점꺼만 할 수 있다던가 그런,,,
+    spot = models.CharField(choices=all_spot, max_length=20, null=False, blank=False)
     
     def __str__(self):
         return self.admin_user.email
