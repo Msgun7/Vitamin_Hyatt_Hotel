@@ -7,13 +7,14 @@ from .models import Rooms, Book, Spots
 from hotels.serializers import RoomsSerializer, BookSerializer, DetailSerializer ,\
                                 SpotSerializer, BookUserListSerializer
 from datetime import date
+from users.models import AdminUser
 
 
 class RoomView(APIView):
     permission_classes = [permissions.IsAuthenticated]
-
     def get(self, request):
-        rooms = Rooms.objects.all()
+        admin = get_object_or_404(AdminUser, admin_user=request.user)
+        rooms = Rooms.objects.filter(spot=admin.spot)
         serializer = RoomsSerializer(rooms, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -29,7 +30,6 @@ class RoomView(APIView):
 # 방 정보 수정 및 삭제
 class DetailRoomViewAPI(APIView):
     permission_classes = [permissions.IsAuthenticated]
-
     def get_object(self, request, room_id):
         room = get_object_or_404(Rooms, id=room_id)
         return room
@@ -55,9 +55,11 @@ class DetailRoomViewAPI(APIView):
 
 
 class BookUsersViewAPI(APIView):
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     def get(self, request, room_id):
-        booked_all_rooms = get_object_or_404(Rooms, id=room_id)
+        print(request.user)
+        admin = get_object_or_404(AdminUser, admin_user=request.user)
+        booked_all_rooms = get_object_or_404(Rooms, id=room_id, spot=admin.spot)
         serializer = BookUserListSerializer(booked_all_rooms)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -127,7 +129,7 @@ class BookManage(APIView):
                     pass
                 elif my_check_out > i.check_in:
                     return Response(f"예약 할 수 없음, 나의 예약 {my_check_in}~{my_check_out}, 이미 예약된 날짜 {i.check_in}~{i.check_out}")
-            elif my_check_in >= i.check_out:  # 체크아웃 날짜가 적절하지 않을 경우 
+            elif my_check_in >= i.check_in:  # 체크아웃 날짜가 적절하지 않을 경우
                 if i.check_out <= my_check_in :
                     pass
                 elif i.check_out > my_check_in:
