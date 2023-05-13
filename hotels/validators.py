@@ -1,6 +1,5 @@
 import re
 from django.core.exceptions import ValidationError
-import phonenumbers
 # phonenumber pip install phonenumbers 필요 전화번호 유효성 검사에 있어 해외번호 또한 사용가능하게 하기 위해서 설치
 from rest_framework.serializers import ValidationError
 
