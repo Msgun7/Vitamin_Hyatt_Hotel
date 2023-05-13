@@ -47,7 +47,7 @@ class MyPage(APIView):
         }
         return Response(data, status=status.HTTP_200_OK)
     
-    def put(self, request, user_id):
+    def patch(self, request, user_id):
         user_profile = get_object_or_404(User, id=user_id)
         data = request.data.copy()
         data['phone'] = request.data['phone'].replace('-', '').strip()
