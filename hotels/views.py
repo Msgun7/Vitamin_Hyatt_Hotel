@@ -4,10 +4,13 @@ from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Rooms, Book, Spots
-from hotels.serializers import RoomsSerializer, BookSerializer, DetailSerializer , SpotSerializer
 # Create your views here.
-from datetime import date
 from django.db.models import Avg
+from hotels.serializers import RoomsSerializer, BookSerializer, DetailSerializer,\
+    SpotSerializer, BookUserListSerializer
+from datetime import date
+from django.shortcuts import redirect
+from django.urls import reverse
 from users.models import AdminUser
 
 
@@ -87,7 +90,12 @@ class SpotViewAPI(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, spot_id=None):
-        serializer = SpotSerializer(data=request.data)
+        # 안되면 카피 사용!
+        # request.data['call_number'] = request.data['call_number'].replace('-', '').strip()
+        data = request.data.copy()
+        data['call_number'] = request.data['call_number'].replace(
+            '-', '').strip()
+        serializer = SpotSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -96,7 +104,10 @@ class SpotViewAPI(APIView):
 
     def patch(self, request, spot_id=None):
         spot = self.get_object(request, spot_id)
-        serializer = SpotSerializer(spot, data=request.data, partial=True)
+        data = request.data.copy()
+        data['call_number'] = request.data['call_number'].replace(
+            '-', '').strip()
+        serializer = SpotSerializer(spot, data=data, partial=True)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -113,7 +124,10 @@ class BookManage(APIView):
     def get(self, request, pk):
         all_books = get_object_or_404(Book, id=pk)
         serializer = BookSerializer(all_books)
-        return Response(serializer.data)
+        redirect_url = reverse('mypagelist', args=[str(all_books.pk)])
+        return redirect(redirect_url)
+        # 마이페이지 에약 상세로 전달
+        # 같은 get메서드가 있어서 마이페이지로 redirect시킴
 
     def post(self, request, pk):
         room = get_object_or_404(Rooms, id=pk)
@@ -121,9 +135,11 @@ class BookManage(APIView):
         all_checkins = room.bookset.filter() # 그 방이 가지고 있는 모든 예약들
         checkin_y_m_d = list(map(int, request.data["check_in"].split('-')))
         checkout_y_m_d = list(map(int, request.data["check_out"].split('-')))
-        my_check_in = date(checkin_y_m_d[0], checkin_y_m_d[1],checkin_y_m_d[2])
-        my_check_out = date(checkout_y_m_d[0],checkout_y_m_d[1],checkout_y_m_d[2])
-        
+        my_check_in = date(
+            checkin_y_m_d[0], checkin_y_m_d[1], checkin_y_m_d[2])
+        my_check_out = date(
+            checkout_y_m_d[0], checkout_y_m_d[1], checkout_y_m_d[2])
+
         for i in all_checkins:
             print(f'{bool((my_check_in)>=(i.check_in))}')
             if my_check_in < i.check_in:  #체크인 날짜가 적절할 경우
