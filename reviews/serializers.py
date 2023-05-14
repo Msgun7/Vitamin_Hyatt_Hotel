@@ -3,6 +3,17 @@ from .models import Review
 from hotels.models import Rooms, Book
 
 
+class AllReviewSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+
+    def get_user(self, obj):
+        return obj.user.username
+
+    class Meta:
+        model = Review
+        fields = '__all__'
+        
+
 class RoomSerializer(serializers.ModelSerializer):
     review_set = serializers.StringRelatedField(many=True, read_only=True)
 
