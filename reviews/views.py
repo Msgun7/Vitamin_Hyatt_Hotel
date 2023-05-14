@@ -14,6 +14,3 @@ class RoomDetail(APIView):
         serializer = RoomSerializer(room_review)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-
-# movie = Movie.objects.get(pk=1)
-# reviews = movie.review_set.all()
