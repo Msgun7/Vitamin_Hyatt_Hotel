@@ -2,6 +2,7 @@ from rest_framework.serializers import ValidationError
 from rest_framework import serializers
 from .models import Rooms, Book, Spots
 from users.serializers import UserSerializer
+from django.db.models import Avg
 
 
 def check_existing_room(**kwargs):
@@ -123,3 +124,14 @@ class BookUserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rooms
         fields = ['name', 'book_set', 'status']
+
+class RoomStarSerializer(serializers.ModelSerializer):
+    avg_star = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Rooms
+        fields = ['id', 'name', 'description', 'price', 'avg_star', 'spot', 'max_members', 'image']
+
+    def get_avg_star(self, obj):
+        avg_star = obj.review_set.aggregate(Avg('stars'))['stars__avg']
+        return round(avg_star, 2) if avg_star else 0

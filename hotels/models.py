@@ -34,7 +34,7 @@ class Rooms(models.Model):
     price = models.IntegerField(validators=[MinValueValidator(0)], null=False)
     max_members = models.IntegerField()
     status = models.CharField(choices=all_status, max_length=10)
-
+    
     def get_absolute_url(self):
         return reverse('detail_room_view', kwargs={'room_id': self.id})
 
