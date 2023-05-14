@@ -10,8 +10,8 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.views import (
     TokenObtainPairView
 )
-from users.serializers import UserSerializer, LoginSerializer, UserProfileSerializer,\
-    UserUpdateSerializer, AdminUserSerializer
+
+from users.serializers import UserSerializer, LoginSerializer, UserProfileSerializer, UserUpdateSerializer, AdminUserSerializer
 
 
 class SignupView(APIView):
@@ -56,7 +56,10 @@ class MyPage(APIView):
     def put(self, request, user_id):
         user_profile = get_object_or_404(User, id=user_id)
         data = request.data.copy()
-        data['phone'] = request.data['phone'].replace('-', '').strip()
+
+        if 'phone' in request.data:
+            data['phone'] = request.data['phone'].replace('-', '').strip()
+
         serializer = UserUpdateSerializer(
             user_profile, data=data, partial=True)
 
@@ -78,16 +81,14 @@ class MyPage(APIView):
             return Response("권한이 없습니다!", status=status.HTTP_403_FORBIDDEN)
 
 
-class MyBookReviewCreate(APIView):
+class MyReviewCreate(APIView):
     permission_classes = [permissions.IsAuthenticated]
-
     def get(self, request, booked_id):
         mybook = get_object_or_404(Book, user=request.user, id=booked_id)
         serializer = myBookSerializer(mybook)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, booked_id):
-        print("진입하였습니다")
         book = get_object_or_404(Book, id=booked_id)  # booked_id에 해당하는 예약
         book.user.point += 100
         book.user.save()

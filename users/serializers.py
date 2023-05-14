@@ -42,6 +42,16 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         password = user.password
         user.set_password(password)
         user.save()
+
+    def update(self, instance, validated_data):
+        password = validated_data.get('password')  # password 값 가져오기
+        if password is not None:  # password 값이 존재하는 경우에만 실행
+            user = super().update(instance, validated_data)
+            user.set_password(password)
+            user.save()
+        else:
+            user = super().update(instance, validated_data)
+            user.save()
         return user
 
 
@@ -66,5 +76,3 @@ class AdminUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = AdminUser
         fields = '__all__'
-
-
