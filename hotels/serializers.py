@@ -56,6 +56,7 @@ class DetailSerializer(serializers.ModelSerializer):
         room.save()
         return room
 
+
 class SpotSerializer(serializers.ModelSerializer):
     all_room = serializers.SerializerMethodField()
 
@@ -124,6 +125,7 @@ class BookUserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rooms
         fields = ['name', 'book_set', 'status']
+
 
 class RoomStarSerializer(serializers.ModelSerializer):
     avg_star = serializers.SerializerMethodField()

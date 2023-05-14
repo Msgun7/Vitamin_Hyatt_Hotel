@@ -1,8 +1,6 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from users.models import User,AdminUser
-from .validators import check_password
-from hotels.validators import validate_phone_number
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -31,10 +29,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('password','phone',) 
-        # extra_kwargs = {
-        #     'password': {'write_only': True},
-        # }
+        fields = ('password','phone',)
     
     def update(self,instance, validated_data):
         password = validated_data.get('password') # password 값 가져오기
@@ -63,6 +58,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'email', 'phone', 'point',)
+
 
 class AdminUserSerializer(serializers.ModelSerializer):
     class Meta:
