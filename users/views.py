@@ -80,7 +80,6 @@ class MyPage(APIView):
 
 class MyBookReviewCreate(APIView):
     permission_classes = [permissions.AllowAny]
-    # hotels.view에서 같은 get메서드가 있어서 마이페이지로 redirect시킴
 
     def get(self, request, booked_id):
         mybook = get_object_or_404(Book, user=request.user, id=booked_id)
