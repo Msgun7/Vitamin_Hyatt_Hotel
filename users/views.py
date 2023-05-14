@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from reviews.models import Review
 from reviews.serializers import ReviewSerializer, myBookSerializer, ReviewCreateSerializer
-from users.models import User
+from users.models import User, AdminUser
 from hotels.models import Book, Rooms
 from rest_framework.generics import get_object_or_404
 from rest_framework import status
@@ -11,12 +11,11 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView
 )
 
-from users.serializers import UserSerializer, LoginSerializer, UserProfileSerializer, UserUpdateSerializer
-
+from users.serializers import UserSerializer, LoginSerializer, UserProfileSerializer, UserUpdateSerializer, AdminUserSerializer
 
 
 class SignupView(APIView):
-     def post(self, request):
+    def post(self, request):
         data = request.data.copy()
         data['phone'] = request.data['phone'].replace('-', '').strip()
         serializer = UserSerializer(data=data)
@@ -24,14 +23,16 @@ class SignupView(APIView):
             serializer.save()
             return Response({'message': ' 가입완료!'}, status=status.HTTP_201_CREATED)
         else:
-            return Response({'message':f'${serializer.errors}'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': f'${serializer.errors}'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginView(TokenObtainPairView):
-    serializer_class=LoginSerializer
-  
+    serializer_class = LoginSerializer
+
+
 class MyPage(APIView):
     permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request, user_id):
         try:
             admin = get_object_or_404(AdminUser, admin_user=request.user)
@@ -52,16 +53,15 @@ class MyPage(APIView):
             }
             return Response(data, status=status.HTTP_200_OK)
 
-    def patch(self, request, user_id):
+    def put(self, request, user_id):
         user_profile = get_object_or_404(User, id=user_id)
         data = request.data.copy()
-        
+
         if 'phone' in request.data:
             data['phone'] = request.data['phone'].replace('-', '').strip()
-        
+
         serializer = UserUpdateSerializer(
             user_profile, data=data, partial=True)
-
 
         if request.user == user_profile:
             if serializer.is_valid():
@@ -80,19 +80,28 @@ class MyPage(APIView):
         else:
             return Response("권한이 없습니다!", status=status.HTTP_403_FORBIDDEN)
 
+
 class MyReviewCreate(APIView):
     permission_classes = [permissions.IsAuthenticated]
+    def get(self, request, booked_id):
+        mybook = get_object_or_404(Book, user=request.user, id=booked_id)
+        serializer = myBookSerializer(mybook)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, booked_id):
         book = get_object_or_404(Book, id=booked_id)  # booked_id에 해당하는 예약
-        print(book)
-        if book.user_id == request.user.id:  # user_id에 해당하는 예약자만 리뷰달 수 있게
+        book.user.point += 100
+        book.user.save()
+        print(book.user_id, book.user.id, request.user.id)
+        if book.user_id == request.user.id:  # booked_id에 해당하는 예약자만 리뷰달 수 있게
             serializer = ReviewCreateSerializer(data=request.data)
             if serializer.is_valid(raise_exception=True):
-                serializer.save(room=book.room, user=request.user, booked=book)
+                serializer.save(room=book.room, user=request.user,
+                                booked=book, point=book.user.point)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response("권한이 없습니다.", status=status.HTTP_401_UNAUTHORIZED)
+
 
 class ReviewDetail(APIView):
     # 리뷰 상세 조회
