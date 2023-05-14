@@ -27,11 +27,12 @@ class SignupView(APIView):
 
 
 class LoginView(TokenObtainPairView):
-    serializer_class=LoginSerializer
+    serializer_class = LoginSerializer
 
 
 class MyPage(APIView):
     permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request, user_id):
         try:
             admin = get_object_or_404(AdminUser, admin_user=request.user)
@@ -51,7 +52,6 @@ class MyPage(APIView):
                 'profile': profileserializer.data,
             }
             return Response(data, status=status.HTTP_200_OK)
-
 
     def put(self, request, user_id):
         user_profile = get_object_or_404(User, id=user_id)
@@ -77,10 +77,9 @@ class MyPage(APIView):
         else:
             return Response("권한이 없습니다!", status=status.HTTP_403_FORBIDDEN)
 
-          
-class MyReviewCreate(APIView):
+
+class MyBookReviewCreate(APIView):
     permission_classes = [permissions.IsAuthenticated]
-    # hotels.view에서 같은 get메서드가 있어서 마이페이지로 redirect시킴
 
     def get(self, request, booked_id):
         mybook = get_object_or_404(Book, user=request.user, id=booked_id)
@@ -90,11 +89,14 @@ class MyReviewCreate(APIView):
     def post(self, request, booked_id):
         print("진입하였습니다")
         book = get_object_or_404(Book, id=booked_id)  # booked_id에 해당하는 예약
+        book.user.point += 100
+        book.user.save()
         print(book.user_id, book.user.id, request.user.id)
         if book.user_id == request.user.id:  # booked_id에 해당하는 예약자만 리뷰달 수 있게
             serializer = ReviewCreateSerializer(data=request.data)
             if serializer.is_valid(raise_exception=True):
-                serializer.save(room=book.room, user=request.user, booked=book)
+                serializer.save(room=book.room, user=request.user,
+                                booked=book, point=book.user.point)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response("권한이 없습니다.", status=status.HTTP_401_UNAUTHORIZED)

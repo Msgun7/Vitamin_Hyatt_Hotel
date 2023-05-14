@@ -31,28 +31,28 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('password','phone',) 
+        fields = ('password', 'phone',)
         # extra_kwargs = {
         #     'password': {'write_only': True},
         # }
-    
-    def update(self,instance, validated_data):
-            
-        user = super().update(instance,validated_data)
+
+    def update(self, instance, validated_data):
+
+        user = super().update(instance, validated_data)
         password = user.password
         user.set_password(password)
         user.save()
         return user
 
 
-class LoginSerializer(TokenObtainPairSerializer): 
+class LoginSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
         token['email'] = user.email
         token['username'] = user.username
         token['is_admin'] = user.is_admin
-        
+
         return token
 
 
@@ -66,3 +66,5 @@ class AdminUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = AdminUser
         fields = '__all__'
+
+
