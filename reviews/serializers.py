@@ -28,6 +28,7 @@ class ReviewSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     booked = serializers.SerializerMethodField()
     room = serializers.SerializerMethodField()
+    spot = serializers.SerializerMethodField()
 
     def get_user(self, obj):
         return obj.user.email
@@ -38,9 +39,13 @@ class ReviewSerializer(serializers.ModelSerializer):
     def get_room(self, obj):
         return obj.room.name
 
+    def get_spot(self, obj):
+        return obj.room.spot.name
+
     class Meta:
         model = Review
-        fields = ['id', 'user', 'booked', 'room', 'title', 'context', 'stars']
+        fields = ['id', 'user', 'booked', 'room',
+                  'title', 'context', 'stars', 'spot']
         extra_kwargs = {
             'user': {'read_only': True},
             'booked': {'read_only': True},
