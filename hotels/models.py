@@ -45,7 +45,7 @@ class Rooms(models.Model):
 class Book(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     room = models.ForeignKey(
-        Rooms, on_delete=models.CASCADE, related_name='bookset')
+            Rooms, on_delete=models.CASCADE, related_name='bookset')
     created_at = models.DateTimeField(auto_now_add=True)
     members = models.IntegerField(default=1)
     check_in = models.DateField() 

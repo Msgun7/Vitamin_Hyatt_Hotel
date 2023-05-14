@@ -1,18 +1,15 @@
 from rest_framework.views import APIView
 from reviews.models import Review
 from reviews.serializers import ReviewSerializer, myBookSerializer, ReviewCreateSerializer
-from users.models import User
-from hotels.models import Book, Rooms
+from users.models import User, AdminUser
+from hotels.models import Book
 from rest_framework.generics import get_object_or_404
 from rest_framework import status
 from rest_framework import permissions
 from rest_framework.response import Response
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView
-)
-
-from users.serializers import UserSerializer, LoginSerializer, UserProfileSerializer, UserUpdateSerializer
-
+from rest_framework_simplejwt.views import TokenObtainPairView
+from users.serializers import UserSerializer, LoginSerializer,\
+                                UserProfileSerializer, UserUpdateSerializer, AdminUserSerializer
 
 
 class SignupView(APIView):
@@ -29,6 +26,7 @@ class SignupView(APIView):
 
 class LoginView(TokenObtainPairView):
     serializer_class=LoginSerializer
+
   
 class MyPage(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -62,7 +60,6 @@ class MyPage(APIView):
         serializer = UserUpdateSerializer(
             user_profile, data=data, partial=True)
 
-
         if request.user == user_profile:
             if serializer.is_valid():
                 serializer.save()
@@ -80,6 +77,7 @@ class MyPage(APIView):
         else:
             return Response("권한이 없습니다!", status=status.HTTP_403_FORBIDDEN)
 
+
 class MyReviewCreate(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -93,6 +91,7 @@ class MyReviewCreate(APIView):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response("권한이 없습니다.", status=status.HTTP_401_UNAUTHORIZED)
+
 
 class ReviewDetail(APIView):
     # 리뷰 상세 조회
