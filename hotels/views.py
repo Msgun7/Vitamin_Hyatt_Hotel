@@ -5,14 +5,13 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Rooms, Book, Spots
 from hotels.serializers import RoomsSerializer, BookSerializer, DetailSerializer , SpotSerializer,BookUserListSerializer , RoomStarSerializer
-# Create your views here.
 from datetime import date
 from django.db.models import Avg
 from users.models import AdminUser
 
 
 class RoomView(APIView):
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         admin = get_object_or_404(AdminUser, admin_user=request.user)
@@ -32,7 +31,7 @@ class RoomView(APIView):
 
 # 방 정보 수정 및 삭제
 class DetailRoomViewAPI(APIView):
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     def get_object(self, request, room_id):
         room = get_object_or_404(Rooms, id=room_id)
         return room
