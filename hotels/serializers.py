@@ -2,6 +2,7 @@ from rest_framework.serializers import ValidationError
 from rest_framework import serializers
 from .models import Rooms, Book, Spots
 from users.serializers import UserSerializer
+from django.db.models import Avg
 
 
 def check_existing_room(**kwargs):
@@ -13,9 +14,8 @@ def check_existing_room(**kwargs):
     if existing_room:
         return True
 
-
+      
 class RoomsSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Rooms
         fields = '__all__'
@@ -92,12 +92,12 @@ class BookSerializer(serializers.ModelSerializer):
         if attrs["check_in"] == attrs["check_out"]:
             raise ValidationError('체크인 날짜는 체크아웃 날짜와 같으면 안됩니다..')
         return attrs
-
+        
 
 class BookViewSerializer(serializers.ModelSerializer):
     class Meta():
         model = Book
-        fields = '__all__'
+        fields ='__all__'
 
 
 class BookInfoSerializer(serializers.ModelSerializer):
@@ -124,3 +124,14 @@ class BookUserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rooms
         fields = ['name', 'book_set', 'status']
+
+class RoomStarSerializer(serializers.ModelSerializer):
+    avg_star = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Rooms
+        fields = ['id', 'name', 'description', 'price', 'avg_star', 'spot', 'max_members', 'image']
+
+    def get_avg_star(self, obj):
+        avg_star = obj.review_set.aggregate(Avg('stars'))['stars__avg']
+        return round(avg_star, 2) if avg_star else 0

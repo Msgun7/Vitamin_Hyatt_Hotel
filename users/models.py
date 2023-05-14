@@ -32,13 +32,11 @@ class User(AbstractBaseUser):
         max_length=255,
         unique=True,
     )
-    password = models.CharField(max_length=100, validators=[check_password])
-    username = models.CharField(
-        max_length=255, null=False, validators=[check_username])
-    phone = models.CharField(
-        validators=[validate_phone_number], max_length=20, unique=True)
+    password = models.CharField(max_length=100,validators=[check_password])
+    username = models.CharField(max_length=255, null=False, validators=[check_username]) 
+    phone = models.CharField(validators=[validate_phone_number], max_length=20, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    point = models.IntegerField(blank=True, default=0)
+    point = models.IntegerField(blank=True, null=True, default= 0)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
