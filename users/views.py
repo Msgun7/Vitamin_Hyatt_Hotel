@@ -79,7 +79,7 @@ class MyPage(APIView):
 
 
 class MyBookReviewCreate(APIView):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, booked_id):
         mybook = get_object_or_404(Book, user=request.user, id=booked_id)
@@ -104,7 +104,7 @@ class MyBookReviewCreate(APIView):
 
 class ReviewDetail(APIView):
     # 리뷰 상세 조회
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, review_id):
         review = get_object_or_404(Review, user=request.user, id=review_id)
