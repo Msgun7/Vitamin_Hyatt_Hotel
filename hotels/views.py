@@ -18,13 +18,13 @@ class RoomView(APIView):
     # permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        print(request.user.id)
         admin = get_object_or_404(AdminUser, admin_user=request.user)
         rooms = Rooms.objects.filter(spot=admin.spot)
         serializer = RoomsSerializer(rooms, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
+        print(request.data)
         serializer = RoomsSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -71,6 +71,7 @@ class BookUsersViewAPI(APIView):
         booked_all_rooms = get_object_or_404(Rooms, id=room_id, spot=admin.spot)
         serializer = BookUserListSerializer(booked_all_rooms)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class BookUserCal(APIView):
     def get(self, request, room_id):
