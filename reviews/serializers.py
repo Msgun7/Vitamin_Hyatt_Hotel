@@ -59,14 +59,17 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
     def get_user(self, obj):
         return obj.user.email
 
+    def get_user(self, obj):
+        return obj.user.email
+
     class Meta:
         model = Review
-        fields = '__all__'
+        fields = ['id', 'user', 'booked', 'room',
+                  'title', 'context', 'stars']
         extra_kwargs = {
             'user': {'read_only': True},
             'booked': {'read_only': True},
             'room': {'read_only': True},
-            'point': {'read_only': True}
         }
 
     def validate_booked(self, value):
@@ -91,4 +94,5 @@ class myBookSerializer(serializers.ModelSerializer):
 
     class Meta():
         model = Book
-        fields = ['user', 'room', 'members', 'check_in', 'check_out', 'spot']
+        fields = ['id', 'user', 'room', 'members',
+                  'check_in', 'check_out', 'spot']

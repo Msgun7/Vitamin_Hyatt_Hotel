@@ -53,7 +53,6 @@ class MyPage(APIView):
             }
             return Response(data, status=status.HTTP_200_OK)
 
-
     def put(self, request, user_id):
         user_profile = get_object_or_404(User, id=user_id)
         data = request.data.copy()
@@ -80,7 +79,7 @@ class MyPage(APIView):
 
 
 class MyBookReviewCreate(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     # hotels.view에서 같은 get메서드가 있어서 마이페이지로 redirect시킴
 
     def get(self, request, booked_id):
@@ -91,11 +90,14 @@ class MyBookReviewCreate(APIView):
     def post(self, request, booked_id):
         print("진입하였습니다")
         book = get_object_or_404(Book, id=booked_id)  # booked_id에 해당하는 예약
+        book.user.point += 100
+        book.user.save()
         print(book.user_id, book.user.id, request.user.id)
         if book.user_id == request.user.id:  # booked_id에 해당하는 예약자만 리뷰달 수 있게
             serializer = ReviewCreateSerializer(data=request.data)
             if serializer.is_valid(raise_exception=True):
-                serializer.save(room=book.room, user=request.user, booked=book)
+                serializer.save(room=book.room, user=request.user,
+                                booked=book, point=book.user.point)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response("권한이 없습니다.", status=status.HTTP_401_UNAUTHORIZED)
@@ -103,7 +105,7 @@ class MyBookReviewCreate(APIView):
 
 class ReviewDetail(APIView):
     # 리뷰 상세 조회
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def get(self, request, review_id):
         review = get_object_or_404(Review, user=request.user, id=review_id)
