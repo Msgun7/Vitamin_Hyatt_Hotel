@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from users.models import User
+from users.models import User, AdminUser
 from .validators import check_password
 from hotels.validators import validate_phone_number
 
@@ -31,19 +31,20 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('password', 'phone',)
-
-    def update(self, instance, validated_data):
-        if validated_data.get('password'):
-            check_password(validated_data['password'])
-
-        if validated_data.get('phone'):
-            validate_phone_number(validated_data['phone'])
-            
-        user = super().update(instance,validated_data)
-        password = user.password
-        user.set_password(password)
-        user.save()
+        fields = ('password','phone',) 
+        # extra_kwargs = {
+        #     'password': {'write_only': True},
+        # }
+    
+    def update(self,instance, validated_data):
+        password = validated_data.get('password') # password 값 가져오기
+        if password is not None: # password 값이 존재하는 경우에만 실행
+            user = super().update(instance, validated_data)
+            user.set_password(password)
+            user.save()
+        else:
+            user = super().update(instance, validated_data)
+            user.save()
         return user
 
 
@@ -53,6 +54,8 @@ class LoginSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
         token['email'] = user.email
         token['username'] = user.username
+        token['is_admin'] = user.is_admin
+        
         return token
 
 
@@ -60,3 +63,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'email', 'phone', 'point',)
+
+
+class AdminUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AdminUser
+        fields = '__all__'

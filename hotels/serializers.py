@@ -13,8 +13,9 @@ def check_existing_room(**kwargs):
     if existing_room:
         return True
 
-      
+
 class RoomsSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Rooms
         fields = '__all__'
@@ -37,7 +38,6 @@ class DetailSerializer(serializers.ModelSerializer):
 
     def get_book_set(self, obj):
         books = Book.objects.filter(room_id=obj.id)
-        # print(books)
         book_list = BookSerializer(books, many=True)
         return book_list.data
 
@@ -55,7 +55,6 @@ class DetailSerializer(serializers.ModelSerializer):
         room = super().update(instance, validated_data)
         room.save()
         return room
-
 
 class SpotSerializer(serializers.ModelSerializer):
     all_room = serializers.SerializerMethodField()
@@ -93,12 +92,12 @@ class BookSerializer(serializers.ModelSerializer):
         if attrs["check_in"] == attrs["check_out"]:
             raise ValidationError('체크인 날짜는 체크아웃 날짜와 같으면 안됩니다..')
         return attrs
-        
+
 
 class BookViewSerializer(serializers.ModelSerializer):
     class Meta():
         model = Book
-        fields ='__all__'
+        fields = '__all__'
 
 
 class BookInfoSerializer(serializers.ModelSerializer):
