@@ -2,16 +2,14 @@ from rest_framework.views import APIView
 from reviews.models import Review
 from reviews.serializers import ReviewSerializer, myBookSerializer, ReviewCreateSerializer
 from users.models import User, AdminUser
-from hotels.models import Book, Rooms
+from hotels.models import Book
 from rest_framework.generics import get_object_or_404
 from rest_framework import status
 from rest_framework import permissions
 from rest_framework.response import Response
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView
-)
-
-from users.serializers import UserSerializer, LoginSerializer, UserProfileSerializer, UserUpdateSerializer, AdminUserSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+from users.serializers import UserSerializer, LoginSerializer,\
+                                UserProfileSerializer, UserUpdateSerializer, AdminUserSerializer
 
 
 class SignupView(APIView):
@@ -29,7 +27,7 @@ class SignupView(APIView):
 class LoginView(TokenObtainPairView):
     serializer_class = LoginSerializer
 
-
+  
 class MyPage(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
