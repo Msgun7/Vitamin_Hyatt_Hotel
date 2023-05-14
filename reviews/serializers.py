@@ -75,12 +75,16 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
 class myBookSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     room = serializers.SerializerMethodField()
+    spot = serializers.SerializerMethodField()
 
     def get_user(self, obj):
         return obj.user.email
 
     def get_room(self, obj):
         return obj.room.name
+
+    def get_spot(self, obj):
+        return obj.room.spot.name
 
     class Meta():
         model = Book
