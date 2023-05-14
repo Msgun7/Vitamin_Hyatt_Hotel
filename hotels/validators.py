@@ -8,7 +8,7 @@ from rest_framework.serializers import ValidationError
 def contains_special_character(name):
     name_regex = re.compile(r"^[a-zA-Z가-힣0-9\s]+$")
     if not name_regex.findall(name):
-        raise ValidationError('이름에 특수문자를 사용할 수 없습니다!')
+        raise ValidationError('이름에 특수문자와 초성을 사용할 수 없습니다!')
     return name
 
 
