@@ -33,24 +33,35 @@ class LoginView(TokenObtainPairView):
 class MyPage(APIView):
     permission_classes = [permissions.IsAuthenticated]
     def get(self, request, user_id):
-        user_profile = get_object_or_404(User, id=user_id)
-        review = Review.objects.filter(user=user_id)
-        book = Book.objects.filter(user=user_id)
-        serializer = ReviewSerializer(review, many=True)
-        bookserializer = myBookSerializer(book, many=True)
-        profileserializer = UserProfileSerializer(user_profile)
-        data = {
-            'reviews': serializer.data,
-            'books': bookserializer.data,
-            'profile': profileserializer.data,
-        }
-        return Response(data, status=status.HTTP_200_OK)
-    
-    def put(self, request, user_id):
+        try:
+            admin = get_object_or_404(AdminUser, admin_user=request.user)
+            serializer = AdminUserSerializer(admin)
+            if admin:
+                return Response(serializer.data, status=status.HTTP_200_OK)
+        except:
+            user_profile = get_object_or_404(User, id=user_id)
+            review = Review.objects.filter(user=user_id)
+            book = Book.objects.filter(user=user_id)
+            serializer = ReviewSerializer(review, many=True)
+            bookserializer = myBookSerializer(book, many=True)
+            profileserializer = UserProfileSerializer(user_profile)
+            data = {
+                'reviews': serializer.data,
+                'books': bookserializer.data,
+                'profile': profileserializer.data,
+            }
+            return Response(data, status=status.HTTP_200_OK)
+
+    def patch(self, request, user_id):
         user_profile = get_object_or_404(User, id=user_id)
         data = request.data.copy()
-        data['phone'] = request.data['phone'].replace('-', '').strip()
-        serializer = UserUpdateSerializer(user_profile,data=data, partial=True)
+        
+        if 'phone' in request.data:
+            data['phone'] = request.data['phone'].replace('-', '').strip()
+        
+        serializer = UserUpdateSerializer(
+            user_profile, data=data, partial=True)
+
 
         if request.user == user_profile:
             if serializer.is_valid():
