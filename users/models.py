@@ -4,7 +4,7 @@ from .validators import check_password, check_username
 from hotels.validators import validate_phone_number
 
 
-class UserManager(BaseUserManager): 
+class UserManager(BaseUserManager):
     def create_user(self, email, password=None):
         if not email:
             raise ValueError("Users must have an email address")
@@ -16,7 +16,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password=None): 
+    def create_superuser(self, email, password=None):
         user = self.create_user(
             email,
             password=password,
@@ -26,7 +26,7 @@ class UserManager(BaseUserManager):
         return user
 
 
-class User(AbstractBaseUser): 
+class User(AbstractBaseUser):
     email = models.EmailField(
         verbose_name="email address",
         max_length=255,
@@ -38,14 +38,14 @@ class User(AbstractBaseUser):
     created_at = models.DateTimeField(auto_now_add=True)
     point = models.IntegerField(blank=True, null=True, default= 0)
     is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=False) 
+    is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
-    
+
     objects = UserManager()
-    
+
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
-    
+
     def __str__(self):
         return self.email
 
@@ -54,7 +54,7 @@ class User(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
-    
+
     @property
     def is_staff(self):
         return self.is_admin
@@ -69,15 +69,12 @@ class AdminUser(models.Model):
         ('5', '포항점'),
     ]
     admin_user = models.OneToOneField(User, on_delete=models.CASCADE)
-    
+
     is_staff = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=True)
     # 지점 넣어도 될까요? 넣어서 방 수정하거나 생성할 때 자기 지점꺼만 할 수 있다던가 그런,,,
-    spot = models.CharField(choices=all_spot, max_length=20, null=False, blank=False)
-    
+    spot = models.CharField(
+        choices=all_spot, max_length=20, null=False, blank=False)
+
     def __str__(self):
         return self.admin_user.email
-
-
-
-
