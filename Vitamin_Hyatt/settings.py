@@ -15,7 +15,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -55,7 +55,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ORIGIN_WHITELIST = ['http://127.0.0.1:8000', 'http://localhost:8000']
+CORS_ORIGIN_WHITELIST = ['http://127.0.0.1:8000', 'http://localhost:8000',
+                         'http://ec2-3-39-193-171.ap-northeast-2.compute.amazonaws.com:8000',
+                         'http://ec2-3-39-193-171.ap-northeast-2.compute.amazonaws.com']
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = True
 
