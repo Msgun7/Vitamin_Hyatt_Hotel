@@ -21,7 +21,6 @@ class RoomView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        print(request.data)
         serializer = RoomsSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -125,14 +124,15 @@ class BookManage(APIView):
         all_checkins = room.bookset.filter()  # 그 방이 가지고 있는 모든 예약들
         checkin_y_m_d = list(map(int, request.data["check_in"].split('-')))
         checkout_y_m_d = list(map(int, request.data["check_out"].split('-')))
-        my_check_in = date(
-            checkin_y_m_d[0], checkin_y_m_d[1], checkin_y_m_d[2])
-        my_check_out = date(
-            checkout_y_m_d[0], checkout_y_m_d[1], checkout_y_m_d[2])
+        my_check_in = date(checkin_y_m_d[0], checkin_y_m_d[1], checkin_y_m_d[2])
+        my_check_out = date(checkout_y_m_d[0], checkout_y_m_d[1], checkout_y_m_d[2])
+        today = date.today()
 
+        # if my_check_in < today:
+        #     return Response(f"{today} 이전으로 예약 할 수 없습니다.")
+        
         for i in all_checkins:
-
-            if my_check_in < i.check_in:  # 체크인 날짜가 적절할 경우
+            if my_check_in < i.check_in:  #체크인 날짜가 적절할 경우
                 pass
                 if my_check_out <= i.check_in:  # 체크 아웃 날짜가 적절한 경우
                     pass
