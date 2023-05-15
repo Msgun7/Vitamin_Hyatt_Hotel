@@ -90,7 +90,6 @@ class MyReviewCreate(APIView):
         book = get_object_or_404(Book, id=booked_id)  # booked_id에 해당하는 예약
         book.user.point += 100
         book.user.save()
-        print(book.user_id, book.user.id, request.user.id)
         if book.user_id == request.user.id:  # booked_id에 해당하는 예약자만 리뷰달 수 있게
             serializer = ReviewCreateSerializer(data=request.data)
             if serializer.is_valid(raise_exception=True):

@@ -58,8 +58,6 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
     def get_user(self, obj):
         return obj.user.email
 
-    def get_user(self, obj):
-        return obj.user.email
 
     class Meta:
         model = Review
