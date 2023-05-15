@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Rooms, Book, Spots
 from hotels.serializers import RoomsSerializer, BookSerializer, DetailSerializer,\
-                                SpotSerializer,BookUserListSerializer , RoomStarSerializer
+    SpotSerializer, BookUserListSerializer, RoomStarSerializer
 from datetime import date
 from django.db.models import Avg
 from users.models import AdminUser
@@ -165,5 +165,4 @@ class RoomViewBySpot(APIView):
     def get(self, request, spot_id):
         rooms_in_spot = Rooms.objects.filter(spot=spot_id)
         serializer = RoomStarSerializer(rooms_in_spot, many=True)
-        return Response(serializer.data,status=status.HTTP_200_OK)
-
+        return Response(serializer.data, status=status.HTTP_200_OK)
