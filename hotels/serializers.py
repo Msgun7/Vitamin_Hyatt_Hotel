@@ -29,7 +29,7 @@ class RoomsSerializer(serializers.ModelSerializer):
             raise ValidationError('인원은 1인 이상부터 가능 합니다! 최대 인원은 10명까지입니다.')
 
         if check_existing_room(name=attrs['name'], spot=attrs['spot']):
-            raise ValidationError('이미 존재 하는 Room입니다!')
+            raise serializers.ValidationError("Invalid booked value")
         return attrs
 
 
