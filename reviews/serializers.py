@@ -15,7 +15,7 @@ class AllReviewSerializer(serializers.ModelSerializer):
 
 
 class RoomSerializer(serializers.ModelSerializer):
-    review_set = serializers.StringRelatedField(many=True, read_only=True)
+    review_set = AllReviewSerializer(many=True, read_only=True)
 
     class Meta:
         model = Rooms
@@ -58,8 +58,6 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
     def get_user(self, obj):
         return obj.user.email
 
-    def get_user(self, obj):
-        return obj.user.email
 
     class Meta:
         model = Review

@@ -4,15 +4,16 @@ from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Rooms, Book, Spots
-from hotels.serializers import RoomsSerializer, BookSerializer, DetailSerializer, SpotSerializer, BookUserListSerializer, RoomStarSerializer
-# Create your views here.
+from hotels.serializers import RoomsSerializer, BookSerializer, DetailSerializer,\
+                                SpotSerializer,BookUserListSerializer , RoomStarSerializer
 from datetime import date
-from django.db.models import Avg
 from users.models import AdminUser
+from rest_framework.serializers import ValidationError
+
 
 
 class RoomView(APIView):
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         admin = get_object_or_404(AdminUser, admin_user=request.user)
@@ -21,18 +22,23 @@ class RoomView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        print(request.data)
         serializer = RoomsSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
+            try:
+                serializer.is_valid(raise_exception=True)
+            except ValidationError as e:
+                error_message = str(e)
+                print("Validation Error:", error_message)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # 방 정보 수정 및 삭제
 class DetailRoomViewAPI(APIView):
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
+
     def get_object(self, request, room_id):
         room = get_object_or_404(Rooms, id=room_id)
         return room
@@ -78,7 +84,8 @@ class BookUserCal(APIView):
 
 # 지점 생성 및 조회
 class SpotViewAPI(APIView):
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
+
     def get_object(self, request, spot_id):
         spot = get_object_or_404(Spots, id=spot_id)
         return spot
@@ -123,14 +130,15 @@ class BookManage(APIView):
         all_checkins = room.bookset.filter()  # 그 방이 가지고 있는 모든 예약들
         checkin_y_m_d = list(map(int, request.data["check_in"].split('-')))
         checkout_y_m_d = list(map(int, request.data["check_out"].split('-')))
-        my_check_in = date(
-            checkin_y_m_d[0], checkin_y_m_d[1], checkin_y_m_d[2])
-        my_check_out = date(
-            checkout_y_m_d[0], checkout_y_m_d[1], checkout_y_m_d[2])
+        my_check_in = date(checkin_y_m_d[0], checkin_y_m_d[1], checkin_y_m_d[2])
+        my_check_out = date(checkout_y_m_d[0], checkout_y_m_d[1], checkout_y_m_d[2])
+        today = date.today()
+
+        # if my_check_in < today:
+        #     return Response(f"{today} 이전으로 예약 할 수 없습니다.")
 
         for i in all_checkins:
-
-            if my_check_in < i.check_in:  # 체크인 날짜가 적절할 경우
+            if my_check_in < i.check_in:  #체크인 날짜가 적절할 경우
                 pass
                 if my_check_out <= i.check_in:  # 체크 아웃 날짜가 적절한 경우
                     pass
@@ -162,9 +170,6 @@ class BookManage(APIView):
 class RoomViewBySpot(APIView):
     def get(self, request, spot_id):
         rooms_in_spot = Rooms.objects.filter(spot=spot_id)
-        avg_star = rooms_in_spot.prefetch_related('review_set').aggregate(
-            Avg('review_set__stars'))['review_set__stars__avg']
-        print(avg_star)
-        serializer = RoomsSerializer(rooms_in_spot, many=True)
-        return Response(serializer.data)
-# 123
+        serializer = RoomStarSerializer(rooms_in_spot, many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+

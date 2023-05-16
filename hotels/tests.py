@@ -11,7 +11,7 @@ class RoomViewTest(APITestCase):
         cls.user = User.objects.create_user(email='miyeong@naver.com', password='1234')
         cls.data = {'email': 'miyeong@naver.com', 'password': '1234'}
         cls.room_data = {'spot': 1, 'name': 'hi', 'price':10000, 'max_members':3,
-                         'status':'empty', 'description':'hihi'}
+                         'status':'empty', 'description':'hihihihihihihihi'}
         cls.spot = Spots.objects.create(name='대구점', call_number='123679', location='gdsgs')
         cls.faker = Faker()
         cls.rooms = []
@@ -35,6 +35,12 @@ class RoomViewTest(APITestCase):
             HTTP_AUTHORIZATION=f"Bearer {self.access_token}",
             data=self.room_data
         )
+        response2 = self.client.post(
+            path=reverse('rooms_view'),
+            HTTP_AUTHORIZATION=f"Bearer {self.access_token}",
+            data=self.room_data
+        )
+        print(response2)
         self.assertEquals(response.status_code, 201)
 
     # 방 목록
@@ -63,12 +69,14 @@ class RoomViewTest(APITestCase):
                                          data={'name': self.faker.sentence()})
             self.assertEquals(response.status_code, 200)
 
+
     # 방 삭제
     def test_delete_room(self):
         for room in self.rooms:
             url = room.get_absolute_url()
             response = self.client.delete(path=url, HTTP_AUTHORIZATION=f"Bearer {self.access_token}")
             self.assertEquals(response.status_code, 204)
+
 
 class SpotViewTest(APITestCase):
     @classmethod
