@@ -7,8 +7,9 @@ from .models import Rooms, Book, Spots
 from hotels.serializers import RoomsSerializer, BookSerializer, DetailSerializer,\
                                 SpotSerializer,BookUserListSerializer , RoomStarSerializer
 from datetime import date
-from django.db.models import Avg
 from users.models import AdminUser
+from rest_framework.serializers import ValidationError
+
 
 
 class RoomView(APIView):
@@ -26,6 +27,11 @@ class RoomView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
+            try:
+                serializer.is_valid(raise_exception=True)
+            except ValidationError as e:
+                error_message = str(e)
+                print("Validation Error:", error_message)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -130,7 +136,7 @@ class BookManage(APIView):
 
         # if my_check_in < today:
         #     return Response(f"{today} 이전으로 예약 할 수 없습니다.")
-        
+
         for i in all_checkins:
             if my_check_in < i.check_in:  #체크인 날짜가 적절할 경우
                 pass
